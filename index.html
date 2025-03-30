@@ -158,12 +158,11 @@
       transform: scale(1.05);
     }
 
-    /* Hidden YouTube Player */
-    #youtube-audio {
+    /* Hidden YouTube Player Container */
+    #player-container {
       position: absolute;
       top: -9999px; /* Move off-screen */
       left: -9999px; /* Hide completely */
-      display: none; /* Hidden until clicked */
     }
 
     /* Start Button */
@@ -191,13 +190,11 @@
   </style>
 </head>
 <body>
-  <!-- YouTube Background Music -->
-  <iframe id="youtube-audio" 
-          src="https://www.youtube.com/embed/ptuIuIl8dJc?autoplay=1&loop=1&playlist=ptuIuIl8dJc" 
-          frameborder="0" allow="autoplay"></iframe>
-
   <!-- Start Button -->
   <button id="start-btn">Click for the magic to begin</button>
+
+  <!-- YouTube Player Container (empty until loaded) -->
+  <div id="player-container"></div>
 
   <!-- Gate Scene -->
   <div id="gate-scene">
@@ -216,33 +213,61 @@
     </div>
   </div>
 
+  <!-- Load YouTube IFrame Player API -->
+  <script src="https://www.youtube.com/iframe_api"></script>
+
   <script>
     // Get elements
     const startBtn = document.getElementById('start-btn');
-    const youtubeAudio = document.getElementById('youtube-audio');
     const gateScene = document.getElementById('gate-scene');
 
     // Initially hide gate scene
     gateScene.style.display = 'none';
 
+    // YouTube player variable
+    let player;
+
+    // Load YouTube player on API ready
+    function onYouTubeIframeAPIReady() {
+      // Player will be created on button click, not here
+    }
+
     // Start everything on button click
     startBtn.addEventListener('click', () => {
       // Hide the button
       startBtn.style.display = 'none';
-      
-      // Show and activate music
-      youtubeAudio.style.display = 'block';
-      
-      // Show gate and start animation
-      gateScene.style.display = 'flex';
-      setTimeout(() => {
-        gateScene.classList.add('gate-open');
+
+      // Create YouTube player
+      player = new YT.Player('player-container', {
+        height: '0', // Invisible
+        width: '0',  // Invisible
+        videoId: 'ptuIuIl8dJc', // Your YouTube video ID
+        playerVars: {
+          autoplay: 1, // Start playing
+          loop: 1,     // Loop the video
+          playlist: 'ptuIuIl8dJc' // Required for looping
+        },
+        events: {
+          'onReady': onPlayerReady
+        }
+      });
+
+      // Show gate and start animation once player is ready
+      function onPlayerReady(event) {
+        event.target.playVideo(); // Ensure it plays
+        gateScene.style.display = 'flex';
         setTimeout(() => {
-          gateScene.style.display = 'none';
-          document.getElementById('cafe-scene').style.display = 'block';
-          startCompliments();
-        }, 3000); // Gate animation duration
-      }, 100); // Slight delay to ensure music starts
+          gateScene.classList.add('gate-open');
+          setTimeout(() => {
+            gateScene.style.display = 'none';
+            document.getElementById('cafe-scene').style.display = 'block';
+            startCompliments();
+          }, 3000); // Gate animation duration
+        }, 100); // Slight delay for smooth start
+      }
+
+      // Start roses
+      setInterval(createRose, 200); // Generate roses every 200ms
     });
 
     // Compliments list
@@ -294,11 +319,6 @@
       document.body.appendChild(rose);
       setTimeout(() => rose.remove(), 5000); // Remove after falling
     }
-
-    // Start roses only after button click
-    startBtn.addEventListener('click', () => {
-      setInterval(createRose, 200); // Generate roses every 200ms
-    });
   </script>
 </body>
 </html>
