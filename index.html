@@ -97,6 +97,7 @@
       text-shadow: 1px 1px 2px #fff;
       animation: float 4s ease-out forwards;
       z-index: 3; /* Above café and roses */
+      text-align: center;
     }
 
     @keyframes float {
@@ -217,12 +218,12 @@
         const compliment = document.createElement('div');
         compliment.className = 'compliment';
         compliment.textContent = compliments[count]; // Sequential compliments
-        compliment.style.left = Math.random() * 80 + 10 + '%'; // Random horizontal
-        compliment.style.top = Math.random() * 60 + 20 + '%'; // Random vertical
+        compliment.style.left = Math.random() * 20 + 40 + '%'; // Between 40% and 60% horizontally (near center)
+        compliment.style.top = Math.random() * 20 + 40 + '%'; // Between 40% and 60% vertically (near center)
         container.appendChild(compliment);
         setTimeout(() => compliment.remove(), 4000); // Remove after animation
         count++;
-      }, 1000); // New compliment every second
+      }, 2000); // New compliment every 2 seconds (slower pace)
     }
 
     // Showering red roses
