@@ -1,269 +1,200 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Capital 2B</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Love’s Secret Café Date</title>
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+      background: #fff0f5; /* Soft romantic pink */
+      font-family: 'Georgia', serif; /* Romantic, elegant font */
+    }
 
-        html {
-            scroll-behavior: smooth;
-        }
+    /* Gate Scene */
+    #gate-scene {
+      position: absolute;
+      width: 100%;
+      height: 100vh;
+      background: linear-gradient(to bottom, #ffb6c1, #f0e6f6); /* Dreamy gradient */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
 
-        body {
-            background: #fff;
-            color: #000;
-            line-height: 1.6;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
+    .gate {
+      position: absolute;
+      width: 50%;
+      height: 100%;
+      background: #8b5a2b; /* Wooden gate color */
+      opacity: 0.9;
+      transition: transform 3s ease-in-out;
+    }
 
-        header {
-            padding: 40px 0;
-            border-bottom: 1px solid #000;
-            position: sticky;
-            top: 0;
-            background: #fff;
-            z-index: 10;
-        }
+    .left-gate {
+      left: 0;
+      transform-origin: left;
+    }
 
-        nav {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
+    .right-gate {
+      right: 0;
+      transform-origin: right;
+    }
 
-        .logo {
-            font-size: 28px;
-            font-weight: 700;
-        }
+    .gate-open .left-gate {
+      transform: translateX(-100%);
+    }
 
-        nav ul {
-            list-style: none;
-            display: flex;
-            gap: 40px;
-        }
+    .gate-open .right-gate {
+      transform: translateX(100%);
+    }
 
-        nav a {
-            color: #000;
-            text-decoration: none;
-            font-weight: 500;
-            font-size: 18px;
-            transition: color 0.3s ease;
-        }
+    #welcome-text {
+      position: absolute;
+      color: #d81b60;
+      font-size: 24px;
+      text-align: center;
+      opacity: 0;
+      animation: fadeIn 2s 1s forwards;
+    }
 
-        nav a:hover {
-            color: #666;
-        }
+    @keyframes fadeIn {
+      to { opacity: 1; }
+    }
 
-        .hero {
-            padding: 80px 0;
-            text-align: center;
-            border-bottom: 1px solid #000;
-        }
+    /* Café Scene */
+    #cafe-scene {
+      position: absolute;
+      width: 100%;
+      height: 100vh;
+      background: linear-gradient(to bottom, #fff8dc, #ffe4e1); /* Warm café tones */
+      display: none;
+    }
 
-        .hero h1 {
-            font-size: 48px;
-            margin-bottom: 20px;
-            animation: fadeIn 1s ease-in;
-        }
+    #character {
+      position: absolute;
+      bottom: 20%;
+      left: -10%;
+      width: 80px;
+      height: 80px;
+      background: url('https://via.placeholder.com/80x80.png?text=You'); /* Replace with your image */
+      animation: walkIn 2s forwards;
+    }
 
-        section {
-            padding: 80px 0;
-            border-bottom: 1px solid #000;
-            opacity: 0;
-            animation: fadeInUp 0.8s ease forwards;
-        }
+    @keyframes walkIn {
+      to { left: 10%; }
+    }
 
-        section:nth-child(2) { animation-delay: 0.2s; }
-        section:nth-child(3) { animation-delay: 0.4s; }
-        section:nth-child(4) { animation-delay: 0.6s; }
-        section:nth-child(5) { animation-delay: 0.8s; }
+    /* Compliments */
+    .compliment {
+      position: absolute;
+      color: #ff1493;
+      font-size: 20px;
+      text-shadow: 1px 1px 2px #fff;
+      animation: float 4s ease-out forwards;
+    }
 
-        h1 {
-            font-size: 40px;
-            margin-bottom: 25px;
-        }
+    @keyframes float {
+      0% { opacity: 0; transform: translateY(50px); }
+      50% { opacity: 1; }
+      100% { opacity: 0; transform: translateY(-150px); }
+    }
 
-        h2 {
-            font-size: 28px;
-            margin-bottom: 15px;
-        }
+    /* Invite */
+    #invite {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+      display: none;
+      color: #c71585;
+    }
 
-        p {
-            max-width: 700px;
-            font-size: 18px;
-            margin-bottom: 25px;
-        }
+    #invite p {
+      font-size: 28px;
+      margin-bottom: 20px;
+      animation: fadeIn 1s forwards;
+    }
 
-        .portfolio-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 30px;
-        }
+    .meet-btn {
+      display: inline-block;
+      padding: 15px 30px;
+      background: #ff69b4;
+      color: white;
+      text-decoration: none;
+      border-radius: 25px;
+      font-size: 18px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+      transition: transform 0.3s;
+    }
 
-        .portfolio-item {
-            padding: 25px;
-            border: 1px solid #000;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .portfolio-item:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-        }
-
-        .team-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 40px;
-        }
-
-        .team-member {
-            text-align: center;
-            padding: 20px;
-            transition: transform 0.3s ease;
-        }
-
-        .team-member:hover {
-            transform: scale(1.05);
-        }
-
-        .contact-form {
-            max-width: 600px;
-            margin: 0 auto;
-        }
-
-        input, textarea {
-            width: 100%;
-            padding: 15px;
-            margin-bottom: 20px;
-            border: 1px solid #000;
-            background: #fff;
-            color: #000;
-            font-size: 18px;
-        }
-
-        button {
-            padding: 12px 30px;
-            background: #000;
-            color: #fff;
-            border: none;
-            cursor: pointer;
-            font-weight: 500;
-            font-size: 18px;
-            transition: background 0.3s ease, transform 0.2s ease;
-        }
-
-        button:hover {
-            background: #333;
-            transform: translateY(-2px);
-        }
-
-        footer {
-            padding: 50px 0;
-            text-align: center;
-            font-size: 16px;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-    </style>
+    .meet-btn:hover {
+      transform: scale(1.05);
+    }
+  </style>
 </head>
 <body>
-    <header>
-        <nav>
-            <div class="logo">Capital 2B</div>
-            <ul>
-                <li><a href="#about">About</a></li>
-                <li><a href="#portfolio">Portfolio</a></li>
-                <li><a href="#team">Team</a></li>
-                <li><a href="#contact">Contact</a></li>
-            </ul>
-        </nav>
-    </header>
+  <!-- Gate Scene -->
+  <div id="gate-scene">
+    <div class="gate left-gate"></div>
+    <div class="gate right-gate"></div>
+    <p id="welcome-text">“Step into my heart, my sweetest love…”</p>
+  </div>
 
-    <div class="hero">
-        <h1>Investing in Deep Science and Tech Startups</h1>
+  <!-- Café Scene -->
+  <div id="cafe-scene">
+    <div id="character"></div>
+    <div id="compliments"></div>
+    <div id="invite">
+      <p>“My darling, will you join me for a date?”</p>
+      <a href="[Your Google Meet Link]" target="_blank" class="meet-btn">Enter Our Love Café</a>
     </div>
+  </div>
 
-    <section id="about">
-        <h1>About Us</h1>
-        <p>Capital 2B is a $75M fund focused on tech and IP-led businesses, backed by stellar LPs like InfoEdge and Temasek. We invest in early-stage and growing startups rooted in science and technology, backing pioneers of intelligence, health, and sustainability.</p>
-        <p>Name of AIF: Capital2B | Category of AIF: Category II AIF</p>
-    </section>
+  <script>
+    // Open the gate and transition to café
+    setTimeout(() => {
+      document.getElementById('gate-scene').classList.add('gate-open');
+      setTimeout(() => {
+        document.getElementById('gate-scene').style.display = 'none';
+        document.getElementById('cafe-scene').style.display = 'block';
+        startCompliments();
+      }, 3000); // Gate animation duration
+    }, 1000); // Delay before gate opens
 
-    <section id="portfolio">
-        <h1>Portfolio</h1>
-        <div class="portfolio-grid">
-            <div class="portfolio-item">
-                <h2>Castler</h2>
-                <p>Digitizing escrow banking for mass adoption.</p>
-            </div>
-            <div class="portfolio-item">
-                <h2>SquareX</h2>
-                <p>Cybersecurity startup.</p>
-            </div>
-            <div class="portfolio-item">
-                <h2>Agrizy</h2>
-                <p>Agritech firm.</p>
-            </div>
-            <div class="portfolio-item">
-                <h2>Soptle</h2>
-                <p>SaaS marketplace.</p>
-            </div>
-        </div>
-    </section>
+    // Romantic compliments
+    const compliments = [
+      'You’re my forever beautiful.',
+      'My heart belongs to you, love.',
+      'You’re the sweetest dream I’ve ever had.',
+      'Every day with you is a gift.',
+      'You make my world so bright, my darling.',
+      'I’m endlessly in love with you.'
+    ];
 
-    <section id="team">
-        <h1>Our Team</h1>
-        <p>The Capital 2B team has decades of operational experience in technology, product, and business, bringing an all-rounded set of competencies to the table.</p>
-        <div class="team-grid">
-            <div class="team-member">
-                <h2>Amit Behl</h2>
-                <p>Partner</p>
-            </div>
-            <div class="team-member">
-                <h2>Vibhore Sharma</h2>
-                <p>Partner</p>
-            </div>
-            <div class="team-member">
-                <h2>Abhay Sahoo</h2>
-                <p>Investments</p>
-            </div>
-            <div class="team-member">
-                <h2>Naviya Singh</h2>
-                <p>Investment Analyst</p>
-            </div>
-        </div>
-    </section>
+    function startCompliments() {
+      const container = document.getElementById('compliments');
+      let count = 0;
 
-    <section id="contact">
-        <h1>Contact Us</h1>
-        <div class="contact-form">
-            <input type="text" placeholder="Name">
-            <input type="email" placeholder="Email">
-            <textarea rows="5" placeholder="Message"></textarea>
-            <button>Send Message</button>
-        </div>
-    </section>
+      const interval = setInterval(() => {
+        if (count >= 12) { // Show 12 compliments
+          clearInterval(interval);
+          document.getElementById('invite').style.display = 'block';
+          return;
+        }
 
-    <footer>
-        <p>© 2025 Capital 2B. All rights reserved.</p>
-    </footer>
+        const compliment = document.createElement('div');
+        compliment.className = 'compliment';
+        compliment.textContent = compliments[Math.floor(Math.random() * compliments.length)];
+        compliment.style.left = Math.random() * 80 + 10 + '%'; // Random horizontal
+        compliment.style.top = Math.random() * 60 + 20 + '%'; // Random vertical
+        container.appendChild(compliment);
+        setTimeout(() => compliment.remove(), 4000); // Remove after animation
+        count++;
+      }, 800); // New compliment every 0.8 seconds
+    }
+  </script>
 </body>
 </html>
