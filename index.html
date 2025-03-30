@@ -163,6 +163,30 @@
       position: absolute;
       top: -9999px; /* Move off-screen */
       left: -9999px; /* Hide completely */
+      display: none; /* Hidden until clicked */
+    }
+
+    /* Start Button */
+    #start-btn {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      padding: 15px 30px;
+      background: #ffd700; /* Gold button */
+      color: #4b0082; /* Purple text */
+      border: none;
+      border-radius: 25px;
+      font-size: 20px;
+      font-family: 'Georgia', serif;
+      cursor: pointer;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+      z-index: 4; /* Above everything */
+      transition: transform 0.3s;
+    }
+
+    #start-btn:hover {
+      transform: translate(-50%, -50%) scale(1.05);
     }
   </style>
 </head>
@@ -171,6 +195,9 @@
   <iframe id="youtube-audio" 
           src="https://www.youtube.com/embed/ptuIuIl8dJc?autoplay=1&loop=1&playlist=ptuIuIl8dJc" 
           frameborder="0" allow="autoplay"></iframe>
+
+  <!-- Start Button -->
+  <button id="start-btn">Click for the magic to begin</button>
 
   <!-- Gate Scene -->
   <div id="gate-scene">
@@ -190,15 +217,33 @@
   </div>
 
   <script>
-    // Open the gate and transition to café
-    setTimeout(() => {
-      document.getElementById('gate-scene').classList.add('gate-open');
+    // Get elements
+    const startBtn = document.getElementById('start-btn');
+    const youtubeAudio = document.getElementById('youtube-audio');
+    const gateScene = document.getElementById('gate-scene');
+
+    // Initially hide gate scene
+    gateScene.style.display = 'none';
+
+    // Start everything on button click
+    startBtn.addEventListener('click', () => {
+      // Hide the button
+      startBtn.style.display = 'none';
+      
+      // Show and activate music
+      youtubeAudio.style.display = 'block';
+      
+      // Show gate and start animation
+      gateScene.style.display = 'flex';
       setTimeout(() => {
-        document.getElementById('gate-scene').style.display = 'none';
-        document.getElementById('cafe-scene').style.display = 'block';
-        startCompliments();
-      }, 3000); // Gate animation duration
-    }, 1000); // Delay before gate opens
+        gateScene.classList.add('gate-open');
+        setTimeout(() => {
+          gateScene.style.display = 'none';
+          document.getElementById('cafe-scene').style.display = 'block';
+          startCompliments();
+        }, 3000); // Gate animation duration
+      }, 100); // Slight delay to ensure music starts
+    });
 
     // Compliments list
     const compliments = [
@@ -250,8 +295,10 @@
       setTimeout(() => rose.remove(), 5000); // Remove after falling
     }
 
-    // Generate roses every 200ms for a continuous shower
-    setInterval(createRose, 200);
+    // Start roses only after button click
+    startBtn.addEventListener('click', () => {
+      setInterval(createRose, 200); // Generate roses every 200ms
+    });
   </script>
 </body>
 </html>
