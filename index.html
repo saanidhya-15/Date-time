@@ -157,9 +157,21 @@
     .meet-btn:hover {
       transform: scale(1.05);
     }
+
+    /* Hidden YouTube Player */
+    #youtube-audio {
+      position: absolute;
+      top: -9999px; /* Move off-screen */
+      left: -9999px; /* Hide completely */
+    }
   </style>
 </head>
 <body>
+  <!-- YouTube Background Music -->
+  <iframe id="youtube-audio" 
+          src="https://www.youtube.com/embed/ptuIuIl8dJc?autoplay=1&loop=1&playlist=ptuIuIl8dJc" 
+          frameborder="0" allow="autoplay"></iframe>
+
   <!-- Gate Scene -->
   <div id="gate-scene">
     <div class="gate left-gate"></div>
