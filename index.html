@@ -21,6 +21,7 @@
       display: flex;
       justify-content: center;
       align-items: center;
+      z-index: 2; /* Above roses */
     }
 
     .gate {
@@ -53,7 +54,7 @@
     #welcome-text {
       position: absolute;
       color: #d81b60;
-      font-size: 24px;
+      font-size: 28px;
       text-align: center;
       opacity: 0;
       animation: fadeIn 2s 1s forwards;
@@ -70,6 +71,7 @@
       height: 100vh;
       background: linear-gradient(to bottom, #fff8dc, #ffe4e1); /* Warm café tones */
       display: none;
+      z-index: 1; /* Below gate but above roses */
     }
 
     #character {
@@ -80,6 +82,7 @@
       height: 80px;
       background: url('https://via.placeholder.com/80x80.png?text=You'); /* Replace with your image */
       animation: walkIn 2s forwards;
+      z-index: 3; /* Above café and roses */
     }
 
     @keyframes walkIn {
@@ -93,12 +96,28 @@
       font-size: 20px;
       text-shadow: 1px 1px 2px #fff;
       animation: float 4s ease-out forwards;
+      z-index: 3; /* Above café and roses */
     }
 
     @keyframes float {
       0% { opacity: 0; transform: translateY(50px); }
       50% { opacity: 1; }
       100% { opacity: 0; transform: translateY(-150px); }
+    }
+
+    /* Roses */
+    .rose {
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      background: url('https://via.placeholder.com/20x20/ff0000/ffffff?text=🌹'); /* Red rose placeholder */
+      animation: fall 5s linear infinite;
+      z-index: 0; /* Behind everything */
+    }
+
+    @keyframes fall {
+      0% { opacity: 1; transform: translateY(-20px); }
+      100% { opacity: 0.5; transform: translateY(100vh); }
     }
 
     /* Invite */
@@ -110,6 +129,7 @@
       text-align: center;
       display: none;
       color: #c71585;
+      z-index: 3; /* Above roses */
     }
 
     #invite p {
@@ -140,7 +160,7 @@
   <div id="gate-scene">
     <div class="gate left-gate"></div>
     <div class="gate right-gate"></div>
-    <p id="welcome-text">“Step into my heart, my sweetest love…”</p>
+    <p id="welcome-text">“Welcome Devanshi Agarwal, my sweetest love…”</p>
   </div>
 
   <!-- Café Scene -->
@@ -148,7 +168,7 @@
     <div id="character"></div>
     <div id="compliments"></div>
     <div id="invite">
-      <p>“My darling, will you join me for a date?”</p>
+      <p>“My darling Devanshi, will you join me for a date?”</p>
       <a href="[Your Google Meet Link]" target="_blank" class="meet-btn">Enter Our Love Café</a>
     </div>
   </div>
@@ -164,14 +184,23 @@
       }, 3000); // Gate animation duration
     }, 1000); // Delay before gate opens
 
-    // Romantic compliments
+    // Updated compliments list
     const compliments = [
-      'You’re my forever beautiful.',
-      'My heart belongs to you, love.',
-      'You’re the sweetest dream I’ve ever had.',
-      'Every day with you is a gift.',
-      'You make my world so bright, my darling.',
-      'I’m endlessly in love with you.'
+      'With you, every second feels like a beautiful eternity.',
+      'Time slows down when I’m with you, and I never want it to speed up.',
+      'You make even the smallest moments feel timeless.',
+      'If I could freeze time, I’d keep us right here, forever.',
+      'No matter how much time passes, you’ll always be my favorite moment.',
+      'You are the most beautiful part of my day, every day.',
+      'Your smile is my favorite kind of magic.',
+      'You make the world brighter just by being in it.',
+      'Being with you feels like a dream I never want to wake up from.',
+      'You’re not just lovely—you’re a feeling I never want to lose.',
+      'Everything about you is effortlessly enchanting.',
+      'You have a heart so kind, it makes the world softer.',
+      'You are my calm in chaos and my joy in silence.',
+      'Loving you is the easiest and best thing I’ve ever done.',
+      'You’re my forever favorite, in every way possible.'
     ];
 
     function startCompliments() {
@@ -179,7 +208,7 @@
       let count = 0;
 
       const interval = setInterval(() => {
-        if (count >= 12) { // Show 12 compliments
+        if (count >= 15) { // Show all 15 compliments
           clearInterval(interval);
           document.getElementById('invite').style.display = 'block';
           return;
@@ -187,14 +216,26 @@
 
         const compliment = document.createElement('div');
         compliment.className = 'compliment';
-        compliment.textContent = compliments[Math.floor(Math.random() * compliments.length)];
+        compliment.textContent = compliments[count]; // Sequential compliments
         compliment.style.left = Math.random() * 80 + 10 + '%'; // Random horizontal
         compliment.style.top = Math.random() * 60 + 20 + '%'; // Random vertical
         container.appendChild(compliment);
         setTimeout(() => compliment.remove(), 4000); // Remove after animation
         count++;
-      }, 800); // New compliment every 0.8 seconds
+      }, 1000); // New compliment every second
     }
+
+    // Showering red roses
+    function createRose() {
+      const rose = document.createElement('div');
+      rose.className = 'rose';
+      rose.style.left = Math.random() * 100 + '%'; // Random horizontal position
+      document.body.appendChild(rose);
+      setTimeout(() => rose.remove(), 5000); // Remove after falling
+    }
+
+    // Generate roses every 200ms for a continuous shower
+    setInterval(createRose, 200);
   </script>
 </body>
 </html>
