@@ -17,7 +17,7 @@
       position: absolute;
       width: 100%;
       height: 100vh;
-      background: linear-gradient(to bottom, #ffb6c1, #f0e6f6); /* Dreamy gradient */
+      background: linear-gradient(to bottom, #4b0082, #dda0dd); /* Royal purple gradient */
       display: flex;
       justify-content: center;
       align-items: center;
@@ -28,8 +28,10 @@
       position: absolute;
       width: 50%;
       height: 100%;
-      background: #8b5a2b; /* Wooden gate color */
-      opacity: 0.9;
+      background: #2f0047; /* Deep royal purple */
+      border: 5px solid #ffd700; /* Gold border for regal look */
+      box-shadow: 0 0 15px rgba(255, 215, 0, 0.8); /* Golden glow */
+      opacity: 0.95;
       transition: transform 3s ease-in-out;
     }
 
@@ -53,9 +55,10 @@
 
     #welcome-text {
       position: absolute;
-      color: #d81b60;
+      color: #ffd700; /* Gold text for royalty */
       font-size: 28px;
       text-align: center;
+      text-shadow: 2px 2px 4px #4b0082; /* Purple shadow for depth */
       opacity: 0;
       animation: fadeIn 2s 1s forwards;
     }
@@ -170,7 +173,7 @@
     <div id="compliments"></div>
     <div id="invite">
       <p>“The wait is over my love”</p>
-      <a href="[Your Google Meet Link]" target="_blank" class="meet-btn">Join In</a>
+      <a href="https://meet.google.com/eno-joey-rwc" target="_blank" class="meet-btn">Join In</a>
     </div>
   </div>
 
@@ -185,7 +188,7 @@
       }, 3000); // Gate animation duration
     }, 1000); // Delay before gate opens
 
-    // Updated compliments list
+    // Compliments list
     const compliments = [
       'With you, every second feels like a beautiful eternity.',
       'Time slows down when I’m with you, and I never want it to speed up.',
