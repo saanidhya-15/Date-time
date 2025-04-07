@@ -1,324 +1,132 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>My Love’s Secret Café Date</title>
-  <style>
-    body {
-      margin: 0;
-      overflow: hidden;
-      background: #fff0f5; /* Soft romantic pink */
-      font-family: 'Georgia', serif; /* Romantic, elegant font */
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our Story - Devanshi ✨🌙</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(to bottom, #1a0b2e, #3c1b5c);
+            color: #fff;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
 
-    /* Gate Scene */
-    #gate-scene {
-      position: absolute;
-      width: 100%;
-      height: 100vh;
-      background: linear-gradient(to bottom, #4b0082, #dda0dd); /* Royal purple gradient */
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      z-index: 2; /* Above roses */
-    }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px;
+            text-align: center;
+            position: relative;
+        }
 
-    .gate {
-      position: absolute;
-      width: 50%;
-      height: 100%;
-      background: #2f0047; /* Deep royal purple */
-      border: 5px solid #ffd700; /* Gold border for regal look */
-      box-shadow: 0 0 15px rgba(255, 215, 0, 0.8); /* Golden glow */
-      opacity: 0.95;
-      transition: transform 3s ease-in-out;
-    }
+        .stars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
 
-    .left-gate {
-      left: 0;
-      transform-origin: left;
-    }
+        @keyframes twinkle {
+            0% { opacity: 0.2; }
+            50% { opacity: 1; }
+            100% { opacity: 0.2; }
+        }
 
-    .right-gate {
-      right: 0;
-      transform-origin: right;
-    }
+        .stars::before {
+            content: '';
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: white;
+            border-radius: 50%;
+            animation: twinkle 2s infinite;
+            box-shadow: 
+                100px 200px #fff,
+                200px 400px #fff,
+                300px 100px #fff,
+                400px 300px #fff,
+                500px 500px #fff,
+                600px 200px #fff,
+                700px 400px #fff,
+                800px 100px #fff;
+        }
 
-    .gate-open .left-gate {
-      transform: translateX(-100%);
-    }
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            color: #f0e4ff;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+        }
 
-    .gate-open .right-gate {
-      transform: translateX(100%);
-    }
+        p {
+            font-size: 1.2em;
+            line-height: 1.6;
+            margin: 20px 0;
+            color: #e6d9ff;
+        }
 
-    #welcome-text {
-      position: absolute;
-      color: #ffd700; /* Gold text for royalty */
-      font-size: 28px;
-      text-align: center;
-      text-shadow: 2px 2px 4px #4b0082; /* Purple shadow for depth */
-      opacity: 0;
-      animation: fadeIn 2s 1s forwards;
-    }
+        .heart {
+            color: #ff6b6b;
+            animation: pulse 2s infinite;
+        }
 
-    @keyframes fadeIn {
-      to { opacity: 1; }
-    }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
 
-    /* Café Scene */
-    #cafe-scene {
-      position: absolute;
-      width: 100%;
-      height: 100vh;
-      background: linear-gradient(to bottom, #fff8dc, #ffe4e1); /* Warm café tones */
-      display: none;
-      z-index: 1; /* Below gate but above roses */
-    }
+        .button {
+            display: inline-block;
+            padding: 15px 30px;
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            text-decoration: none;
+            border-radius: 25px;
+            margin-top: 30px;
+            transition: all 0.3s ease;
+            border: 1px solid #fff;
+        }
 
-    #character {
-      position: absolute;
-      bottom: 20%;
-      left: -10%;
-      width: 80px;
-      height: 80px;
-      background: url('https://via.placeholder.com/80x80.png?text=You'); /* Replace with your image */
-      animation: walkIn 2s forwards;
-      z-index: 3; /* Above café and roses */
-    }
+        .button:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+        }
 
-    @keyframes walkIn {
-      to { left: 10%; }
-    }
-
-    /* Compliments */
-    .compliment {
-      position: absolute;
-      color: #ff1493;
-      font-size: 20px;
-      text-shadow: 1px 1px 2px #fff;
-      animation: float 4s ease-out forwards;
-      z-index: 3; /* Above café and roses */
-      text-align: center;
-    }
-
-    @keyframes float {
-      0% { opacity: 0; transform: translateY(50px); }
-      50% { opacity: 1; }
-      100% { opacity: 0; transform: translateY(-150px); }
-    }
-
-    /* Roses */
-    .rose {
-      position: absolute;
-      width: 20px;
-      height: 20px;
-      background: url('https://via.placeholder.com/20x20/ff0000/ffffff?text=🌹'); /* Red rose placeholder */
-      animation: fall 5s linear infinite;
-      z-index: 0; /* Behind everything */
-    }
-
-    @keyframes fall {
-      0% { opacity: 1; transform: translateY(-20px); }
-      100% { opacity: 0.5; transform: translateY(100vh); }
-    }
-
-    /* Invite */
-    #invite {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      text-align: center;
-      display: none;
-      color: #c71585;
-      z-index: 3; /* Above roses */
-    }
-
-    #invite p {
-      font-size: 28px;
-      margin-bottom: 20px;
-      animation: fadeIn 1s forwards;
-    }
-
-    .meet-btn {
-      display: inline-block;
-      padding: 15px 30px;
-      background: #ff69b4;
-      color: white;
-      text-decoration: none;
-      border-radius: 25px;
-      font-size: 18px;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-      transition: transform 0.3s;
-    }
-
-    .meet-btn:hover {
-      transform: scale(1.05);
-    }
-
-    /* Hidden YouTube Player Container */
-    #player-container {
-      position: absolute;
-      top: -9999px; /* Move off-screen */
-      left: -9999px; /* Hide completely */
-    }
-
-    /* Start Button */
-    #start-btn {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      padding: 15px 30px;
-      background: #ffd700; /* Gold button */
-      color: #4b0082; /* Purple text */
-      border: none;
-      border-radius: 25px;
-      font-size: 20px;
-      font-family: 'Georgia', serif;
-      cursor: pointer;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-      z-index: 4; /* Above everything */
-      transition: transform 0.3s;
-    }
-
-    #start-btn:hover {
-      transform: translate(-50%, -50%) scale(1.05);
-    }
-  </style>
+        .moon {
+            font-size: 1.5em;
+            margin: 0 10px;
+        }
+    </style>
 </head>
 <body>
-  <!-- Start Button -->
-  <button id="start-btn">Click for the magic to begin</button>
+    <div class="stars"></div>
+    <div class="container">
+        <h1><span class="moon">🌙</span> Welcome to Our Story, Devanshi <span class="moon">✨</span></h1>
+        
+        <p>Tonight, we go on a date like no other—a journey through time, back to the very first words we exchanged, the first moments that made our hearts flutter, and all the little milestones that led us here, today.</p>
 
-  <!-- YouTube Player Container (empty until loaded) -->
-  <div id="player-container"></div>
+        <p>🚪 Step through the door to the day we first met—relive those nervous, excited words we typed to each other.</p>
 
-  <!-- Gate Scene -->
-  <div id="gate-scene">
-    <div class="gate left-gate"></div>
-    <div class="gate right-gate"></div>
-    <p id="welcome-text">“Welcome Devanshi Agarwal, my sweetest love…”</p>
-  </div>
+        <p>💬 Swipe through our first messages—remember how it all started? The first joke, the first late-night conversation, the first time we just knew something was different?</p>
 
-  <!-- Café Scene -->
-  <div id="cafe-scene">
-    <div id="character"></div>
-    <div id="compliments"></div>
-    <div id="invite">
-      <p>“The wait is over my love”</p>
-      <a href="https://meet.google.com/eno-joey-rwc" target="_blank" class="meet-btn">Join In</a>
+        <p>📅 Walk through our timeline—the sweet surprises, the songs we shared, the way we counted days apart, the moments we made special despite the distance.</p>
+
+        <p>🎶 Listen to our playlist—because every song has a memory, and every lyric holds a piece of our hearts.</p>
+
+        <p>📷 See our scrapbook of moments—from the tiny snapshots of everyday love to the big milestones that made us stronger.</p>
+
+        <p>🌠 And finally, let’s step into today—April 7, 2025. The day we made it official. The day "You and I" became Us. <span class="heart">💖</span></p>
+
+        <a href="#journey" class="button">Click to Begin This Journey, My Love</a>
     </div>
-  </div>
-
-  <!-- Load YouTube IFrame Player API -->
-  <script src="https://www.youtube.com/iframe_api"></script>
-
-  <script>
-    // Get elements
-    const startBtn = document.getElementById('start-btn');
-    const gateScene = document.getElementById('gate-scene');
-
-    // Initially hide gate scene
-    gateScene.style.display = 'none';
-
-    // YouTube player variable
-    let player;
-
-    // Load YouTube player on API ready
-    function onYouTubeIframeAPIReady() {
-      // Player will be created on button click, not here
-    }
-
-    // Start everything on button click
-    startBtn.addEventListener('click', () => {
-      // Hide the button
-      startBtn.style.display = 'none';
-
-      // Create YouTube player
-      player = new YT.Player('player-container', {
-        height: '0', // Invisible
-        width: '0',  // Invisible
-        videoId: 'ptuIuIl8dJc', // Your YouTube video ID
-        playerVars: {
-          autoplay: 1, // Start playing
-          loop: 1,     // Loop the video
-          playlist: 'ptuIuIl8dJc' // Required for looping
-        },
-        events: {
-          'onReady': onPlayerReady
-        }
-      });
-
-      // Show gate and start animation once player is ready
-      function onPlayerReady(event) {
-        event.target.playVideo(); // Ensure it plays
-        gateScene.style.display = 'flex';
-        setTimeout(() => {
-          gateScene.classList.add('gate-open');
-          setTimeout(() => {
-            gateScene.style.display = 'none';
-            document.getElementById('cafe-scene').style.display = 'block';
-            startCompliments();
-          }, 3000); // Gate animation duration
-        }, 100); // Slight delay for smooth start
-      }
-
-      // Start roses
-      setInterval(createRose, 200); // Generate roses every 200ms
-    });
-
-    // Compliments list
-    const compliments = [
-      'With you, every second feels like a beautiful eternity.',
-      'Time slows down when I’m with you, and I never want it to speed up.',
-      'You make even the smallest moments feel timeless.',
-      'If I could freeze time, I’d keep us right here, forever.',
-      'No matter how much time passes, you’ll always be my favorite moment.',
-      'You are the most beautiful part of my day, every day.',
-      'Your smile is my favorite kind of magic.',
-      'You make the world brighter just by being in it.',
-      'Being with you feels like a dream I never want to wake up from.',
-      'You’re not just lovely—you’re a feeling I never want to lose.',
-      'Everything about you is effortlessly enchanting.',
-      'You have a heart so kind, it makes the world softer.',
-      'You are my calm in chaos and my joy in silence.',
-      'Loving you is the easiest and best thing I’ve ever done.',
-      'You’re my forever favorite, in every way possible.'
-    ];
-
-    function startCompliments() {
-      const container = document.getElementById('compliments');
-      let count = 0;
-
-      const interval = setInterval(() => {
-        if (count >= 15) { // Show all 15 compliments
-          clearInterval(interval);
-          document.getElementById('invite').style.display = 'block';
-          return;
-        }
-
-        const compliment = document.createElement('div');
-        compliment.className = 'compliment';
-        compliment.textContent = compliments[count]; // Sequential compliments
-        compliment.style.left = Math.random() * 20 + 40 + '%'; // Between 40% and 60% horizontally (near center)
-        compliment.style.top = Math.random() * 20 + 40 + '%'; // Between 40% and 60% vertically (near center)
-        container.appendChild(compliment);
-        setTimeout(() => compliment.remove(), 4000); // Remove after animation
-        count++;
-      }, 2000); // New compliment every 2 seconds (slower pace)
-    }
-
-    // Showering red roses
-    function createRose() {
-      const rose = document.createElement('div');
-      rose.className = 'rose';
-      rose.style.left = Math.random() * 100 + '%'; // Random horizontal position
-      document.body.appendChild(rose);
-      setTimeout(() => rose.remove(), 5000); // Remove after falling
-    }
-  </script>
 </body>
 </html>
