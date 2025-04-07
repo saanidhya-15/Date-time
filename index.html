@@ -18,7 +18,7 @@
             position: fixed;
             top: 0;
             left: 0;
-            width: 100%;
+            width:  operated100%;
             height: 100%;
             pointer-events: none;
             z-index: -1;
@@ -162,10 +162,25 @@
             transform: translateY(-2px);
             box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
         }
+
+        #background-audio {
+            position: fixed;
+            top: -9999px; /* Hide the iframe off-screen */
+            left: -9999px;
+            width: 0;
+            height: 0;
+        }
     </style>
 </head>
 <body>
     <div class="stars"></div>
+
+    <!-- Background Audio (Hidden YouTube Embed) -->
+    <iframe id="background-audio" 
+            src="https://www.youtube.com/embed/YPlIhgAX9AQ?autoplay=1&loop=1&playlist=YPlIhgAX9AQ&mute=0" 
+            frameborder="0" 
+            allow="autoplay; encrypted-media" 
+            allowfullscreen></iframe>
 
     <div class="section" id="welcome">
         <h1><span class="moon">🌙</span> Welcome to Our Story, Devanshi <span class="moon">✨</span></h1>
@@ -194,7 +209,7 @@
     <div class="section" id="playlist">
         <h2>🎶 Our Playlist</h2>
         <p>Listen to the melodies that wove through our story—because every song holds a memory, and every lyric carries a piece of our hearts.</p>
-        <iframe width="560" height="315" src="https://www.youtube.com/embed/YPlIhgAX9AQ?si=79ERNP9KB1Jof7Oq" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        <p><em>"Perfect" by Ed Sheeran is playing in the background, just for us.</em></p>
         <a href="#scrapbook" class="scroll-down">Next ↓</a>
     </div>
 
