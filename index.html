@@ -144,6 +144,24 @@
         .floating-message.visible {
             opacity: 1;
         }
+
+        .join-button {
+            display: inline-block;
+            padding: 15px 30px;
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            text-decoration: none;
+            border-radius: 25px;
+            margin-top: 20px;
+            transition: all 0.3s ease;
+            border: 1px solid #fff;
+        }
+
+        .join-button:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+        }
     </style>
 </head>
 <body>
@@ -176,6 +194,7 @@
     <div class="section" id="playlist">
         <h2>🎶 Our Playlist</h2>
         <p>Listen to the melodies that wove through our story—because every song holds a memory, and every lyric carries a piece of our hearts.</p>
+        <iframe width="560" height="315" src="https://www.youtube.com/embed/YPlIhgAX9AQ?si=79ERNP9KB1Jof7Oq" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
         <a href="#scrapbook" class="scroll-down">Next ↓</a>
     </div>
 
@@ -189,6 +208,8 @@
         <h2>🌠 Today - April 7, 2025</h2>
         <p>And finally, here we are—April 7, 2025. The day we made it official. The day "You and I" became Us. <span class="heart">💖</span></p>
         <p>My love, this is our story—forever and always.</p>
+        <p><em>Say you are worth it.</em></p>
+        <a href="#join-link" class="join-button">Join In</a>
     </div>
 
     <div id="floating-message" class="floating-message"></div>
@@ -230,16 +251,15 @@
             const isLeft = Math.random() < 0.5;
             messageElement.className = `floating-message ${isLeft ? 'left' : 'right'}`;
             messageElement.innerHTML = randomMessage;
-            messageElement.style.top = `${Math.random() * 60 + 20}%`; // Random vertical position
+            messageElement.style.top = `${Math.random() * 60 + 20}%`;
             messageElement.classList.add('visible');
 
             setTimeout(() => {
                 messageElement.classList.remove('visible');
-                setTimeout(showRandomMessage, 2000); // Wait before showing next
-            }, 5000); // Show for 5 seconds
+                setTimeout(showRandomMessage, 2000);
+            }, 5000);
         }
 
-        // Start the message cycle after page load
         window.addEventListener('load', () => {
             setTimeout(showRandomMessage, 2000);
         });
