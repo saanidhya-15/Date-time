@@ -11,16 +11,7 @@
             font-family: 'Arial', sans-serif;
             background: linear-gradient(to bottom, #1a0b2e, #3c1b5c);
             color: #fff;
-            min-height: 100vh;
             overflow-x: hidden;
-        }
-
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 40px;
-            text-align: center;
-            position: relative;
         }
 
         .stars {
@@ -58,18 +49,44 @@
                 800px 100px #fff;
         }
 
-        h1 {
-            font-size: 2.5em;
-            margin-bottom: 20px;
+        .section {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 40px;
+            max-width: 800px;
+            margin: 0 auto;
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 0.8s ease-out;
+        }
+
+        .section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        h1, h2 {
             color: #f0e4ff;
             text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            font-size: 2.5em;
+        }
+
+        h2 {
+            font-size: 1.8em;
         }
 
         p {
             font-size: 1.2em;
             line-height: 1.6;
-            margin: 20px 0;
             color: #e6d9ff;
+            text-align: center;
         }
 
         .heart {
@@ -83,50 +100,149 @@
             100% { transform: scale(1); }
         }
 
-        .button {
-            display: inline-block;
-            padding: 15px 30px;
-            background: rgba(255, 255, 255, 0.1);
-            color: #fff;
-            text-decoration: none;
-            border-radius: 25px;
-            margin-top: 30px;
-            transition: all 0.3s ease;
-            border: 1px solid #fff;
-        }
-
-        .button:hover {
-            background: rgba(255, 255, 255, 0.2);
-            transform: translateY(-2px);
-            box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
-        }
-
         .moon {
             font-size: 1.5em;
             margin: 0 10px;
+        }
+
+        .scroll-down {
+            position: absolute;
+            bottom: 20px;
+            color: #fff;
+            text-decoration: none;
+            font-size: 1.2em;
+            opacity: 0.7;
+            transition: opacity 0.3s;
+        }
+
+        .scroll-down:hover {
+            opacity: 1;
+        }
+
+        .floating-message {
+            position: fixed;
+            padding: 15px 25px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            max-width: 250px;
+            font-size: 1em;
+            color: #fff;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            z-index: 10;
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
+        }
+
+        .floating-message.left {
+            left: 20px;
+        }
+
+        .floating-message.right {
+            right: 20px;
+        }
+
+        .floating-message.visible {
+            opacity: 1;
         }
     </style>
 </head>
 <body>
     <div class="stars"></div>
-    <div class="container">
+
+    <div class="section" id="welcome">
         <h1><span class="moon">🌙</span> Welcome to Our Story, Devanshi <span class="moon">✨</span></h1>
-        
         <p>Tonight, we go on a date like no other—a journey through time, back to the very first words we exchanged, the first moments that made our hearts flutter, and all the little milestones that led us here, today.</p>
-
-        <p>🚪 Step through the door to the day we first met—relive those nervous, excited words we typed to each other.</p>
-
-        <p>💬 Swipe through our first messages—remember how it all started? The first joke, the first late-night conversation, the first time we just knew something was different?</p>
-
-        <p>📅 Walk through our timeline—the sweet surprises, the songs we shared, the way we counted days apart, the moments we made special despite the distance.</p>
-
-        <p>🎶 Listen to our playlist—because every song has a memory, and every lyric holds a piece of our hearts.</p>
-
-        <p>📷 See our scrapbook of moments—from the tiny snapshots of everyday love to the big milestones that made us stronger.</p>
-
-        <p>🌠 And finally, let’s step into today—April 7, 2025. The day we made it official. The day "You and I" became Us. <span class="heart">💖</span></p>
-
-        <a href="#journey" class="button">Click to Begin This Journey, My Love</a>
+        <a href="#first-meet" class="scroll-down">Begin Our Journey ↓</a>
     </div>
+
+    <div class="section" id="first-meet">
+        <h2>🚪 The Day We Met</h2>
+        <p>Step through the door to that magical moment—relive those nervous, excited words we typed to each other, the first sparks of something beautiful beginning to glow.</p>
+        <a href="#first-messages" class="scroll-down">Next ↓</a>
+    </div>
+
+    <div class="section" id="first-messages">
+        <h2>💬 Our First Messages</h2>
+        <p>Swipe through those early words—remember how it all started? The first joke that made us laugh, the first late-night conversation that kept us up, the first time we just knew something was different?</p>
+        <a href="#timeline" class="scroll-down">Next ↓</a>
+    </div>
+
+    <div class="section" id="timeline">
+        <h2>📅 Our Timeline</h2>
+        <p>Walk through our shared history—the sweet surprises that made us smile, the songs we shared that became our soundtrack, the way we counted days apart, and the moments we made special despite the distance.</p>
+        <a href="#playlist" class="scroll-down">Next ↓</a>
+    </div>
+
+    <div class="section" id="playlist">
+        <h2>🎶 Our Playlist</h2>
+        <p>Listen to the melodies that wove through our story—because every song holds a memory, and every lyric carries a piece of our hearts.</p>
+        <a href="#scrapbook" class="scroll-down">Next ↓</a>
+    </div>
+
+    <div class="section" id="scrapbook">
+        <h2>📷 Our Scrapbook</h2>
+        <p>See the moments we captured—from the tiny snapshots of everyday love to the big milestones that made us stronger, each one a treasure in our collection.</p>
+        <a href="#today" class="scroll-down">Next ↓</a>
+    </div>
+
+    <div class="section" id="today">
+        <h2>🌠 Today - April 7, 2025</h2>
+        <p>And finally, here we are—April 7, 2025. The day we made it official. The day "You and I" became Us. <span class="heart">💖</span></p>
+        <p>My love, this is our story—forever and always.</p>
+    </div>
+
+    <div id="floating-message" class="floating-message"></div>
+
+    <script>
+        // Section reveal
+        const sections = document.querySelectorAll('.section');
+        function checkScroll() {
+            sections.forEach(section => {
+                const sectionTop = section.getBoundingClientRect().top;
+                const windowHeight = window.innerHeight;
+                if (sectionTop < windowHeight * 0.8) {
+                    section.classList.add('visible');
+                }
+            });
+        }
+        window.addEventListener('scroll', checkScroll);
+        window.addEventListener('load', checkScroll);
+
+        // Floating messages
+        const messages = [
+            "🌸 It all started with a simple message… and look where we are now.",
+            "💌 Hey, you. Remember the first time we talked? I had no idea you'd become my favorite person.",
+            "✨ From our first late-night chat to endless conversations… I never wanted them to end.",
+            "🎶 Every song we shared became a part of our story. Just like you became a part of me.",
+            "💖 Even miles apart, you felt so close. Every message, every call, every ‘I miss you’—it all mattered.",
+            "📅 Counting days, waiting for the next call, planning surprises… long distance, but never apart.",
+            "🥰 You made the ordinary feel special. Even a simple ‘Good morning’ from you made my whole day.",
+            "💫 Somewhere along the way, I realized… it’s always been you.",
+            "📷 Each moment, each memory, saved like little love notes in my heart.",
+            "💍 And now, today—April 7, 2025—we write a new chapter: Us.",
+            "🚀 This is just the beginning, Devanshi."
+        ];
+
+        const messageElement = document.getElementById('floating-message');
+        
+        function showRandomMessage() {
+            const randomMessage = messages[Math.floor(Math.random() * messages.length)];
+            const isLeft = Math.random() < 0.5;
+            messageElement.className = `floating-message ${isLeft ? 'left' : 'right'}`;
+            messageElement.innerHTML = randomMessage;
+            messageElement.style.top = `${Math.random() * 60 + 20}%`; // Random vertical position
+            messageElement.classList.add('visible');
+
+            setTimeout(() => {
+                messageElement.classList.remove('visible');
+                setTimeout(showRandomMessage, 2000); // Wait before showing next
+            }, 5000); // Show for 5 seconds
+        }
+
+        // Start the message cycle after page load
+        window.addEventListener('load', () => {
+            setTimeout(showRandomMessage, 2000);
+        });
+    </script>
 </body>
 </html>
