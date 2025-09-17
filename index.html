@@ -1,283 +1,254 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Our Story - Devanshi ✨🌙</title>
-    <style>
-        body {
-            margin: 0;
-            padding: 0;
-            font-family: 'Arial', sans-serif;
-            background: linear-gradient(to bottom, #1a0b2e, #3c1b5c);
-            color: #fff;
-            overflow-x: hidden;
-        }
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Bahara — Handcrafted Home Decor</title>
+  <meta name="description" content="Bahara — grassroots Indian home decor: handcrafted, earthy, rooted." />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@300;400;700&family=Rubik:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#faf8f6;
+      --accent:#9f6a42;
+      --accent-dark:#5a351f;
+      --muted:#7b4b2f;
+      --ink:#22140a;
+      --card:#ffffff;
+      --paper-gradient: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.02));
+      --radius:16px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:Rubik, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      background:var(--bg);
+      color:var(--ink);
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      line-height:1.45;
+    }
+    .container{max-width:1100px;margin:0 auto;padding:0 20px;}
+    /* Header */
+    header{
+      background:var(--paper-gradient);
+      padding:36px 0;
+      border-bottom:1px solid rgba(0,0,0,0.03);
+    }
+    .nav{
+      display:flex;align-items:center;justify-content:space-between;gap:16px;
+    }
+    .brand{display:flex;align-items:center;gap:12px}
+    .logo{
+      width:56px;height:56px;border-radius:10px;
+      background:linear-gradient(135deg,var(--accent),var(--accent-dark));
+      display:grid;place-items:center;color:#fff;font-weight:700;font-family:Merriweather,serif;
+      box-shadow:0 6px 18px rgba(46,25,12,0.08);
+    }
+    .brand h1{margin:0;font-family:Merriweather,serif;font-size:20px;letter-spacing:0.2px}
+    nav a{color:var(--muted);text-decoration:none;font-weight:600}
+    .nav-links{display:flex;gap:18px;align-items:center}
+    .cta{
+      background:var(--accent);color:#fff;padding:10px 16px;border-radius:999px;text-decoration:none;font-weight:600;
+      box-shadow:0 6px 18px rgba(159,106,66,0.12)
+    }
 
-        .stars {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width:  operated100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: -1;
-        }
+    /* Hero */
+    .hero{
+      display:flex;gap:36px;align-items:center;padding:56px 0;
+      flex-wrap:wrap;
+    }
+    .hero-left{flex:1 1 380px;min-width:280px;}
+    .kicker{display:inline-block;padding:6px 10px;background:rgba(159,106,66,0.08);color:var(--accent-dark);border-radius:999px;font-weight:600;font-size:13px}
+    .hero-title{font-family:Merriweather,serif;font-size:40px;margin:18px 0 12px;color:var(--ink)}
+    .hero-desc{color:var(--muted);max-width:56ch;margin-bottom:18px}
+    .hero-ctas{display:flex;gap:12px;flex-wrap:wrap}
+    .secondary{padding:10px 14px;border:1px solid rgba(34,20,10,0.06);border-radius:999px;color:var(--accent-dark);background:#fff;text-decoration:none;font-weight:600}
 
-        @keyframes twinkle {
-            0% { opacity: 0.2; }
-            50% { opacity: 1; }
-            100% { opacity: 0.2; }
-        }
+    .hero-right{flex:0 0 360px;min-width:260px}
+    .hero-card{
+      background:var(--card);border-radius:18px;padding:18px;box-shadow:0 18px 40px rgba(34,20,10,0.06);
+      display:grid;grid-template-rows:1fr auto;overflow:hidden;height:320px;
+    }
+    .hero-image{background:linear-gradient(180deg, rgba(159,106,66,0.06), rgba(59,35,20,0.03));display:grid;place-items:center;font-weight:600;color:var(--muted);font-family:Merriweather,serif;border-radius:12px;height:100%}
 
-        .stars::before {
-            content: '';
-            position: absolute;
-            width: 2px;
-            height: 2px;
-            background: white;
-            border-radius: 50%;
-            animation: twinkle 2s infinite;
-            box-shadow: 
-                100px 200px #fff,
-                200px 400px #fff,
-                300px 100px #fff,
-                400px 300px #fff,
-                500px 500px #fff,
-                600px 200px #fff,
-                700px 400px #fff,
-                800px 100px #fff;
-        }
+    /* Products */
+    .section{padding:48px 0}
+    .grid{display:grid;gap:18px;grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
+    .card{background:var(--card);border-radius:12px;padding:14px;border:1px solid rgba(34,20,10,0.04);box-shadow:0 8px 22px rgba(34,20,10,0.04)}
+    .card .img{height:160px;border-radius:10px;background:linear-gradient(135deg,#efe9e2,#f7f3f0);display:grid;place-items:center;color:var(--muted);font-weight:600}
+    .card h4{margin:12px 0 6px;font-size:16px}
+    .price{color:var(--accent-dark);font-weight:700}
+    .card p{color:#6b4a3a;margin:0 0 12px;font-size:14px}
 
-        .section {
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            padding: 40px;
-            max-width: 800px;
-            margin: 0 auto;
-            opacity: 0;
-            transform: translateY(50px);
-            transition: all 0.8s ease-out;
-        }
+    /* About & contact */
+    .about{background:linear-gradient(180deg, rgba(159,106,66,0.02), rgba(0,0,0,0.01));padding:26px;border-radius:12px}
+    form input, form textarea{
+      width:100%;padding:10px;border-radius:8px;border:1px solid rgba(34,20,10,0.06);font-family:inherit;margin-bottom:10px
+    }
+    form button{background:var(--accent);color:white;padding:10px 14px;border-radius:999px;border:none;font-weight:700;cursor:pointer}
 
-        .section.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
+    /* Footer */
+    footer{padding:28px 0;border-top:1px solid rgba(0,0,0,0.04);color:#6b4a3a}
+    .flex{display:flex;gap:16px;align-items:center}
+    .muted{color:#8a6a55;font-size:14px}
 
-        h1, h2 {
-            color: #f0e4ff;
-            text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
-            margin-bottom: 20px;
-        }
+    /* Responsive */
+    @media (max-width:800px){
+      .hero-title{font-size:32px}
+      .hero{padding:28px 0}
+      .hero-right{order:-1;width:100%}
+      .nav-links{display:none}
+      .mobile-toggle{display:inline-block}
+    }
 
-        h1 {
-            font-size: 2.5em;
-        }
-
-        h2 {
-            font-size: 1.8em;
-        }
-
-        p {
-            font-size: 1.2em;
-            line-height: 1.6;
-            color: #e6d9ff;
-            text-align: center;
-        }
-
-        .heart {
-            color: #ff6b6b;
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-            100% { transform: scale(1); }
-        }
-
-        .moon {
-            font-size: 1.5em;
-            margin: 0 10px;
-        }
-
-        .scroll-down {
-            position: absolute;
-            bottom: 20px;
-            color: #fff;
-            text-decoration: none;
-            font-size: 1.2em;
-            opacity: 0.7;
-            transition: opacity 0.3s;
-        }
-
-        .scroll-down:hover {
-            opacity: 1;
-        }
-
-        .floating-message {
-            position: fixed;
-            padding: 15px 25px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 20px;
-            max-width: 250px;
-            font-size: 1em;
-            color: #fff;
-            opacity: 0;
-            transition: opacity 0.5s ease;
-            z-index: 10;
-            box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
-        }
-
-        .floating-message.left {
-            left: 20px;
-        }
-
-        .floating-message.right {
-            right: 20px;
-        }
-
-        .floating-message.visible {
-            opacity: 1;
-        }
-
-        .join-button {
-            display: inline-block;
-            padding: 15px 30px;
-            background: rgba(255, 255, 255, 0.1);
-            color: #fff;
-            text-decoration: none;
-            border-radius: 25px;
-            margin-top: 20px;
-            transition: all 0.3s ease;
-            border: 1px solid #fff;
-        }
-
-        .join-button:hover {
-            background: rgba(255, 255, 255, 0.2);
-            transform: translateY(-2px);
-            box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
-        }
-
-        #background-audio {
-            position: fixed;
-            top: -9999px; /* Hide the iframe off-screen */
-            left: -9999px;
-            width: 0;
-            height: 0;
-        }
-    </style>
+    .mobile-toggle{display:none;background:none;border:0;font-size:20px;padding:6px;color:var(--muted);cursor:pointer}
+  </style>
 </head>
 <body>
-    <div class="stars"></div>
+  <header>
+    <div class="container nav">
+      <div class="brand">
+        <div class="logo" aria-hidden="true">B</div>
+        <div>
+          <h1 style="margin:0;font-size:16px">Bahara</h1>
+          <div class="muted" style="font-size:12px">Handcrafted home decor</div>
+        </div>
+      </div>
 
-    <!-- Background Audio (Hidden YouTube Embed) -->
-    <iframe id="background-audio" 
-            src="https://www.youtube.com/embed/YPlIhgAX9AQ?autoplay=1&loop=1&playlist=YPlIhgAX9AQ&mute=0" 
-            frameborder="0" 
-            allow="autoplay; encrypted-media" 
-            allowfullscreen></iframe>
+      <div class="nav-links" role="navigation" aria-label="Main">
+        <a href="#shop">Shop</a>
+        <a href="#about">About</a>
+        <a href="#contact">Contact</a>
+        <a class="cta" href="#shop">Shop</a>
+      </div>
 
-    <div class="section" id="welcome">
-        <h1><span class="moon">🌙</span> Welcome to Our Story, Devanshi <span class="moon">✨</span></h1>
-        <p>Tonight, we go on a date like no other—a journey through time, back to the very first words we exchanged, the first moments that made our hearts flutter, and all the little milestones that led us here, today.</p>
-        <a href="#first-meet" class="scroll-down">Begin Our Journey ↓</a>
+      <button class="mobile-toggle" aria-label="Open menu" onclick="toggleNav()">☰</button>
     </div>
+  </header>
 
-    <div class="section" id="first-meet">
-        <h2>🚪 The Day We Met</h2>
-        <p>Step through the door to that magical moment—relive those nervous, excited words we typed to each other, the first sparks of something beautiful beginning to glow.</p>
-        <a href="#first-messages" class="scroll-down">Next ↓</a>
+  <main class="container">
+    <section class="hero">
+      <div class="hero-left">
+        <span class="kicker">Made in India • Small-batch</span>
+        <h2 class="hero-title">Bahara — Objects that tell a story</h2>
+        <p class="hero-desc">Rooted in craft, every piece at Bahara originates from a maker’s hands and a place. Natural materials, honest processes — designed to feel like home.</p>
+        <div class="hero-ctas">
+          <a class="cta" href="#shop">Explore catalogue</a>
+          <a class="secondary" href="#about">Our story</a>
+        </div>
+      </div>
+
+      <div class="hero-right">
+        <div class="hero-card" aria-hidden="true">
+          <div class="hero-image">Featured product</div>
+          <div style="display:flex;align-items:center;justify-content:space-between;padding-top:12px;">
+            <div>
+              <div style="font-weight:700">Terracotta Table Lamp</div>
+              <div class="muted" style="font-size:13px">Hand-thrown • Natural glaze</div>
+            </div>
+            <div style="text-align:right">
+              <div class="price">₹2,799</div>
+              <div style="font-size:12px;color:#8a6a55">Small-batch</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="shop" class="section">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px">
+        <h3 style="margin:0">Curated catalogue</h3>
+        <div class="muted">Handmade • Natural materials • Fair pay</div>
+      </div>
+
+      <div class="grid" role="list">
+        <article class="card" role="listitem">
+          <div class="img">Cushion</div>
+          <h4>Kashmiri Wool Cushion</h4>
+          <p>Handwoven cushion with natural dyes — soft and warm.</p>
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <div class="price">₹1,499</div>
+            <button class="secondary" style="background:none;border:1px solid rgba(34,20,10,0.06);border-radius:999px;padding:8px 12px">Add</button>
+          </div>
+        </article>
+
+        <article class="card" role="listitem">
+          <div class="img">Lamp</div>
+          <h4>Terracotta Table Lamp</h4>
+          <p>Earthen lamp shaped by local artisans — ambient and tactile.</p>
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <div class="price">₹2,799</div>
+            <button class="secondary" style="background:none;border:1px solid rgba(34,20,10,0.06);border-radius:999px;padding:8px 12px">Add</button>
+          </div>
+        </article>
+
+        <article class="card" role="listitem">
+          <div class="img">Rug</div>
+          <h4>Jute Floor Rug</h4>
+          <p>Durable jute rug with hand-stitched edges — earthy neutrals.</p>
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <div class="price">₹3,499</div>
+            <button class="secondary" style="background:none;border:1px solid rgba(34,20,10,0.06);border-radius:999px;padding:8px 12px">Add</button>
+          </div>
+        </article>
+
+        <article class="card" role="listitem">
+          <div class="img">Bedspread</div>
+          <h4>Block-Printed Bedspread</h4>
+          <p>Traditional block prints on breathable cotton — light and artisanal.</p>
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <div class="price">₹2,199</div>
+            <button class="secondary" style="background:none;border:1px solid rgba(34,20,10,0.06);border-radius:999px;padding:8px 12px">Add</button>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section id="about" class="section">
+      <div class="about">
+        <h3 style="margin-top:0">Our story</h3>
+        <p class="muted">Bahara began as a small experiment to source honest objects made by Indian artisans and give them a modern place in city homes. We work directly with craft clusters, pay fair prices and favour natural materials. Each product includes a note about the maker.</p>
+      </div>
+    </section>
+
+    <section id="contact" class="section">
+      <h3>Get in touch</h3>
+      <form style="max-width:640px;margin-top:12px" onsubmit="event.preventDefault(); alert('Thanks — message received (demo)')">
+        <input type="text" placeholder="Your name" aria-label="Your name" required />
+        <input type="email" placeholder="Email" aria-label="Email" required />
+        <textarea placeholder="Message" aria-label="Message" rows="5" required></textarea>
+        <div style="margin-top:8px">
+          <button type="submit">Send message</button>
+        </div>
+      </form>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px">
+      <div style="display:flex;align-items:center;gap:12px">
+        <div class="logo" style="width:44px;height:44px;font-size:18px">B</div>
+        <div>
+          <div style="font-weight:700">Bahara</div>
+          <div class="muted">Handcrafted home decor</div>
+        </div>
+      </div>
+
+      <div class="muted" style="text-align:right">© <span id="year"></span> Bahara — Crafted with care</div>
     </div>
+  </footer>
 
-    <div class="section" id="first-messages">
-        <h2>💬 Our First Messages</h2>
-        <p>Swipe through those early words—remember how it all started? The first joke that made us laugh, the first late-night conversation that kept us up, the first time we just knew something was different?</p>
-        <a href="#timeline" class="scroll-down">Next ↓</a>
-    </div>
-
-    <div class="section" id="timeline">
-        <h2>📅 Our Timeline</h2>
-        <p>Walk through our shared history—the sweet surprises that made us smile, the songs we shared that became our soundtrack, the way we counted days apart, and the moments we made special despite the distance.</p>
-        <a href="#playlist" class="scroll-down">Next ↓</a>
-    </div>
-
-    <div class="section" id="playlist">
-        <h2>🎶 Our Playlist</h2>
-        <p>Listen to the melodies that wove through our story—because every song holds a memory, and every lyric carries a piece of our hearts.</p>
-        <p><em>"Perfect" by Ed Sheeran is playing in the background, just for us.</em></p>
-        <a href="#scrapbook" class="scroll-down">Next ↓</a>
-    </div>
-
-    <div class="section" id="scrapbook">
-        <h2>📷 Our Scrapbook</h2>
-        <p>See the moments we captured—from the tiny snapshots of everyday love to the big milestones that made us stronger, each one a treasure in our collection.</p>
-        <a href="#today" class="scroll-down">Next ↓</a>
-    </div>
-
-    <div class="section" id="today">
-        <h2>🌠 Today - April 7, 2025</h2>
-        <p>And finally, here we are—April 7, 2025. The day we made it official. The day "You and I" became Us. <span class="heart">💖</span></p>
-        <p>My love, this is our story—forever and always.</p>
-        <p><em>Say you are worth it.</em></p>
-        <a href="#join-link" class="join-button">Join In</a>
-    </div>
-
-    <div id="floating-message" class="floating-message"></div>
-
-    <script>
-        // Section reveal
-        const sections = document.querySelectorAll('.section');
-        function checkScroll() {
-            sections.forEach(section => {
-                const sectionTop = section.getBoundingClientRect().top;
-                const windowHeight = window.innerHeight;
-                if (sectionTop < windowHeight * 0.8) {
-                    section.classList.add('visible');
-                }
-            });
-        }
-        window.addEventListener('scroll', checkScroll);
-        window.addEventListener('load', checkScroll);
-
-        // Floating messages
-        const messages = [
-            "🌸 It all started with a simple message… and look where we are now.",
-            "💌 Hey, you. Remember the first time we talked? I had no idea you'd become my favorite person.",
-            "✨ From our first late-night chat to endless conversations… I never wanted them to end.",
-            "🎶 Every song we shared became a part of our story. Just like you became a part of me.",
-            "💖 Even miles apart, you felt so close. Every message, every call, every ‘I miss you’—it all mattered.",
-            "📅 Counting days, waiting for the next call, planning surprises… long distance, but never apart.",
-            "🥰 You made the ordinary feel special. Even a simple ‘Good morning’ from you made my whole day.",
-            "💫 Somewhere along the way, I realized… it’s always been you.",
-            "📷 Each moment, each memory, saved like little love notes in my heart.",
-            "💍 And now, today—April 7, 2025—we write a new chapter: Us.",
-            "🚀 This is just the beginning, Devanshi."
-        ];
-
-        const messageElement = document.getElementById('floating-message');
-        
-        function showRandomMessage() {
-            const randomMessage = messages[Math.floor(Math.random() * messages.length)];
-            const isLeft = Math.random() < 0.5;
-            messageElement.className = `floating-message ${isLeft ? 'left' : 'right'}`;
-            messageElement.innerHTML = randomMessage;
-            messageElement.style.top = `${Math.random() * 60 + 20}%`;
-            messageElement.classList.add('visible');
-
-            setTimeout(() => {
-                messageElement.classList.remove('visible');
-                setTimeout(showRandomMessage, 2000);
-            }, 5000);
-        }
-
-        window.addEventListener('load', () => {
-            setTimeout(showRandomMessage, 2000);
-        });
-    </script>
+  <script>
+    // Mobile nav toggle (very small)
+    function toggleNav(){
+      const links = document.querySelector('.nav-links');
+      if(!links) return;
+      if(links.style.display === 'flex') links.style.display = '';
+      else links.style.display = 'flex';
+    }
+    // Footer year
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
 </body>
 </html>
