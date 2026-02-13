@@ -1,157 +1,731 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>hey deva</title>
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>For Deva</title>
 <style>
-*{box-sizing:border-box}
+  *, *::before, *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
 
-body {
-    margin:0;
-    font-family:-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    height:100vh;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    background:#0f0f12;
-    color:#f5f5f7;
-    overflow:hidden;
-}
+  :root {
+    --cream:       #FBF7F2;
+    --blush:       #F2E0D6;
+    --blush-deep:  #E8C8B8;
+    --rose:        #D4A090;
+    --rose-soft:   #C9928A;
+    --warm-brown:  #8C6A5D;
+    --text-primary:#5A3E36;
+    --text-light:  #907A72;
+    --white:       #FFFDFB;
+  }
 
-.container{
-    text-align:center;
-    max-width:560px;
-    padding:40px 28px;
-}
+  html, body {
+    height: 100%;
+    overflow: hidden;
+    font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, Georgia, serif;
+    background: var(--cream);
+    color: var(--text-primary);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
 
-h1{
-    font-weight:500;
-    letter-spacing:-0.3px;
-    font-size:28px;
-    margin-bottom:14px;
-}
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(ellipse at 20% 0%, rgba(242, 224, 214, 0.6) 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 100%, rgba(232, 200, 184, 0.4) 0%, transparent 50%),
+      radial-gradient(ellipse at 50% 50%, rgba(251, 247, 242, 1) 0%, rgba(242, 224, 214, 0.3) 100%);
+    z-index: 0;
+    pointer-events: none;
+  }
 
-p{
-    color:#a1a1aa;
-    font-size:16px;
-    margin-bottom:38px;
-    line-height:1.6;
-}
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    opacity: 0.018;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-size: 256px 256px;
+    z-index: 0;
+    pointer-events: none;
+  }
 
-.buttons{
-    position:relative;
-    height:140px;
-}
+  /* ─── Scenes ─── */
+  .scene {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 1;
+    padding: 2rem 1.5rem;
+    transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1),
+                transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  }
 
-button{
-    border-radius:999px;
-    padding:14px 26px;
-    font-size:16px;
-    cursor:pointer;
-    border:1px solid rgba(255,255,255,0.08);
-    backdrop-filter: blur(10px);
-    transition: transform .25s ease, background .25s ease, opacity .4s ease;
-    position:absolute;
-}
+  .scene.hidden {
+    opacity: 0;
+    transform: translateY(12px);
+    pointer-events: none;
+  }
 
-#yesBtn{
-    background:#ffffff;
-    color:#0f0f12;
-    left:30%;
-}
+  .scene.exit {
+    opacity: 0;
+    transform: translateY(-16px) scale(0.98);
+    pointer-events: none;
+  }
 
-#yesBtn:hover{
-    transform:scale(1.06);
-}
+  /* ─── Ask Scene ─── */
+  .ask-scene .content {
+    text-align: center;
+    max-width: 440px;
+    width: 100%;
+  }
 
-#noBtn{
-    background:transparent;
-    color:#a1a1aa;
-    left:55%;
-}
+  .ornament {
+    width: 40px;
+    height: 1px;
+    background: var(--rose);
+    margin: 0 auto 2rem;
+    opacity: 0;
+    animation: fadeSlideUp 1s cubic-bezier(0.4, 0, 0.2, 1) 0.2s forwards;
+  }
 
-.success{
-    margin-top:34px;
-    font-size:18px;
-    line-height:1.7;
-    opacity:0;
-    transition:opacity .8s ease;
-    color:#e4e4e7;
-}
+  .heading {
+    font-size: clamp(1.6rem, 5.5vw, 2.4rem);
+    font-weight: 400;
+    line-height: 1.4;
+    letter-spacing: -0.01em;
+    color: var(--text-primary);
+    margin-bottom: 1rem;
+    opacity: 0;
+    animation: fadeSlideUp 1s cubic-bezier(0.4, 0, 0.2, 1) 0.4s forwards;
+  }
 
-.show{
-    opacity:1;
-}
+  .subtext {
+    font-family: Georgia, serif;
+    font-size: clamp(0.85rem, 2.8vw, 1rem);
+    font-style: italic;
+    font-weight: 400;
+    color: var(--text-light);
+    line-height: 1.6;
+    margin-bottom: 2.8rem;
+    opacity: 0;
+    animation: fadeSlideUp 1s cubic-bezier(0.4, 0, 0.2, 1) 0.6s forwards;
+  }
+
+  /* ─── Buttons ─── */
+  .buttons {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1.2rem;
+    min-height: 56px;
+    opacity: 0;
+    animation: fadeSlideUp 1s cubic-bezier(0.4, 0, 0.2, 1) 0.85s forwards;
+  }
+
+  .btn {
+    font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, Georgia, serif;
+    font-size: 0.95rem;
+    letter-spacing: 0.08em;
+    text-transform: lowercase;
+    border: none;
+    cursor: pointer;
+    outline: none;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+  }
+
+  /* ─── Yes Button ─── */
+  .btn-yes {
+    background: var(--rose);
+    color: var(--white);
+    padding: 0.9rem 2.8rem;
+    border-radius: 100px;
+    box-shadow: 0 2px 16px rgba(212, 160, 144, 0.25);
+    position: relative;
+    z-index: 2;
+    transition:
+      transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1),
+      background 0.4s ease,
+      box-shadow 0.6s ease,
+      padding 0.5s cubic-bezier(0.34, 1.56, 0.64, 1),
+      font-size 0.5s cubic-bezier(0.34, 1.56, 0.64, 1),
+      outline 0.4s ease,
+      outline-offset 0.4s ease;
+    outline: 1.5px solid transparent;
+    outline-offset: 4px;
+  }
+
+  .btn-yes:hover {
+    background: var(--rose-soft);
+  }
+
+  .btn-yes:active {
+    transform: scale(0.97) !important;
+  }
+
+  /* ─── No Button ─── */
+  .btn-no {
+    background: transparent;
+    color: var(--text-light);
+    padding: 0.9rem 2.4rem;
+    border-radius: 100px;
+    border: 1px solid #C9B5AC;
+    position: relative;
+    z-index: 1;
+    white-space: nowrap;
+    transition: none;
+  }
+
+  .btn-no.moving {
+    transition:
+      left 0.45s cubic-bezier(0.34, 1.56, 0.64, 1),
+      top 0.45s cubic-bezier(0.34, 1.56, 0.64, 1),
+      transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1),
+      opacity 0.5s ease,
+      font-size 0.4s ease,
+      padding 0.4s ease,
+      border-color 0.4s ease,
+      color 0.4s ease;
+  }
+
+  .btn-no.fast {
+    transition:
+      left 0.22s cubic-bezier(0.22, 1, 0.36, 1),
+      top 0.22s cubic-bezier(0.22, 1, 0.36, 1),
+      transform 0.22s cubic-bezier(0.22, 1, 0.36, 1),
+      opacity 0.4s ease,
+      font-size 0.3s ease,
+      padding 0.3s ease,
+      border-color 0.3s ease,
+      color 0.3s ease;
+  }
+
+  .btn-no.frantic {
+    transition:
+      left 0.12s cubic-bezier(0.22, 1, 0.36, 1),
+      top 0.12s cubic-bezier(0.22, 1, 0.36, 1),
+      transform 0.12s cubic-bezier(0.22, 1, 0.36, 1),
+      opacity 0.3s ease,
+      font-size 0.2s ease,
+      padding 0.2s ease;
+  }
+
+  /* ─── Whisper ─── */
+  .whisper {
+    position: fixed;
+    bottom: 1.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: Georgia, serif;
+    font-style: italic;
+    font-size: 0.78rem;
+    color: var(--text-light);
+    opacity: 0;
+    transition: opacity 0.5s ease, transform 0.4s ease;
+    z-index: 10;
+    text-align: center;
+    pointer-events: none;
+    width: max-content;
+    max-width: 85vw;
+  }
+
+  .whisper.visible {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  .whisper.swap {
+    opacity: 0;
+    transform: translateX(-50%) translateY(4px);
+  }
+
+  /* ─── Yes Scene ─── */
+  .yes-scene {
+    text-align: center;
+    padding: 2rem 1.8rem;
+  }
+
+  .yes-scene .ornament-top {
+    width: 32px;
+    height: 1px;
+    background: var(--rose);
+    margin: 0 auto 2.4rem;
+    opacity: 0;
+    animation: fadeIn 1s ease 0.3s forwards;
+  }
+
+  .yes-scene .msg-line {
+    font-size: clamp(1rem, 3.5vw, 1.25rem);
+    font-weight: 400;
+    line-height: 1.8;
+    color: var(--text-primary);
+    max-width: 380px;
+    margin: 0 auto;
+    opacity: 0;
+  }
+
+  .yes-scene .msg-line:nth-child(2) { animation: fadeSlideUp 0.9s cubic-bezier(0.4, 0, 0.2, 1) 0.5s forwards; }
+  .yes-scene .msg-line:nth-child(3) { animation: fadeSlideUp 0.9s cubic-bezier(0.4, 0, 0.2, 1) 1.6s forwards; }
+  .yes-scene .msg-line:nth-child(4) { animation: fadeSlideUp 0.9s cubic-bezier(0.4, 0, 0.2, 1) 2.7s forwards; }
+  .yes-scene .msg-line:nth-child(5) { animation: fadeSlideUp 0.9s cubic-bezier(0.4, 0, 0.2, 1) 3.8s forwards; }
+
+  .yes-scene .spacer { height: 1.6rem; }
+
+  .yes-scene .msg-closing {
+    font-family: Georgia, serif;
+    font-style: italic;
+    font-size: clamp(0.85rem, 2.8vw, 0.95rem);
+    color: var(--text-light);
+    margin-top: 2.4rem;
+    opacity: 0;
+    animation: fadeSlideUp 0.9s cubic-bezier(0.4, 0, 0.2, 1) 5s forwards;
+  }
+
+  .ornament-bottom {
+    width: 32px;
+    height: 1px;
+    background: var(--rose);
+    margin: 2.4rem auto 0;
+    opacity: 0;
+    animation: fadeIn 1s ease 5.4s forwards;
+  }
+
+  /* ─── Floating hearts ─── */
+  .heart-float {
+    position: fixed;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  .heart-float svg {
+    fill: var(--blush-deep);
+    opacity: 0.15;
+  }
+
+  @keyframes floatUp {
+    0%   { opacity: 0; transform: translateY(0) scale(0.5) rotate(0deg); }
+    10%  { opacity: 1; }
+    90%  { opacity: 1; }
+    100% { opacity: 0; transform: translateY(-100vh) scale(1) rotate(20deg); }
+  }
+
+  /* ─── Keyframes ─── */
+  @keyframes fadeSlideUp {
+    from { opacity: 0; transform: translateY(14px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+
+  @keyframes pulseGlow {
+    0%, 100% { box-shadow: 0 4px 20px rgba(212, 160, 144, 0.3); }
+    50%      { box-shadow: 0 4px 36px rgba(212, 160, 144, 0.55); }
+  }
+
+  /* ─── Audio Toggle ─── */
+  .audio-toggle {
+    position: fixed;
+    bottom: 1.4rem;
+    right: 1.4rem;
+    width: 36px;
+    height: 36px;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    z-index: 100;
+    padding: 0;
+    opacity: 0;
+    transition: opacity 0.6s ease;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .audio-toggle.visible { opacity: 0.45; }
+  .audio-toggle:hover   { opacity: 0.7; }
+
+  .audio-toggle svg {
+    width: 20px;
+    height: 20px;
+    fill: none;
+    stroke: var(--warm-brown);
+    stroke-width: 1.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .audio-toggle .muted-line {
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .audio-toggle.muted .muted-line { opacity: 1; }
+
+  @media (max-height: 600px) {
+    .subtext { margin-bottom: 2rem; }
+    .heading { margin-bottom: 0.8rem; }
+  }
+
+  @media (min-width: 768px) {
+    .btn-yes { padding: 1rem 3.2rem; }
+    .btn-no  { padding: 1rem 2.8rem; }
+  }
 </style>
 </head>
 <body>
 
-<audio id="bgMusic" loop>
+  <!-- Ask Scene -->
+  <div class="scene ask-scene" id="askScene">
+    <div class="content">
+      <div class="ornament"></div>
+      <h1 class="heading">Deva, would you go on an online date with me?</h1>
+      <p class="subtext">just one evening, just us</p>
+      <div class="buttons" id="buttonArea">
+        <button class="btn btn-yes" id="yesBtn">yes</button>
+        <button class="btn btn-no" id="noBtn">no</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Whisper -->
+  <div class="whisper" id="whisper"></div>
+
+  <!-- Yes Scene -->
+  <div class="scene yes-scene hidden" id="yesScene">
+    <div class="ornament-top"></div>
+    <p class="msg-line">Deva, I was hoping you would say yes.</p>
+    <div class="spacer"></div>
+    <p class="msg-line">Tonight at 10:30 pm, it is just you and me.</p>
+    <p class="msg-line">No rush, no expectations, just time together.</p>
+    <div class="spacer"></div>
+    <p class="msg-line">See you at 10:30 pm.</p>
+    <p class="msg-closing">yours, always</p>
+    <div class="ornament-bottom"></div>
+  </div>
+
+  <!-- Audio Toggle -->
+  <button class="audio-toggle" id="audioToggle" aria-label="Toggle music">
+    <svg viewBox="0 0 24 24">
+      <path d="M11 5L6 9H2v6h4l5 4V5z"/>
+      <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+      <path d="M19.07 4.93a10 10 0 0 1 0 14.14"/>
+      <line class="muted-line" x1="1" y1="1" x2="23" y2="23"/>
+    </svg>
+  </button>
+
+  <audio id="bgMusic" loop preload="auto">
     <source src="the-night-we-met.mp3" type="audio/mpeg">
-</audio>
-
-<div class="container">
-    <h1>deva, would you go on an online date with me?</h1>
-    <p>
-        this is simple on purpose.
-        something small, just us, no noise.
-        <br><span style="font-size:14px;opacity:.7">(try pressing no — it refuses to cooperate)</span>
-    </p>
-
-    <div class="buttons">
-        <button id="yesBtn">yes</button>
-        <button id="noBtn">no</button>
-    </div>
-
-    <div class="success" id="successMsg">
-        deva,
-        <br><br>
-        i was hoping you would say yes.
-        tonight at 10:30 pm, it is just you and me.
-        no rush, no expectations, just time together.
-        <br><br>
-        see you at 10:30 pm.
-    </div>
-</div>
+  </audio>
 
 <script>
+(function () {
+  'use strict';
 
-const yesBtn = document.getElementById("yesBtn");
-const noBtn = document.getElementById("noBtn");
-const successMsg = document.getElementById("successMsg");
-const music = document.getElementById("bgMusic");
+  const askScene    = document.getElementById('askScene');
+  const yesScene    = document.getElementById('yesScene');
+  const yesBtn      = document.getElementById('yesBtn');
+  const noBtn       = document.getElementById('noBtn');
+  const whisper     = document.getElementById('whisper');
+  const bgMusic     = document.getElementById('bgMusic');
+  const audioToggle = document.getElementById('audioToggle');
 
-let scale = 1;
+  let attempts      = 0;
+  let musicStarted  = false;
+  let musicPlaying  = false;
+  let escaped       = false;
 
-// Start music on first interaction
+  // ─── No button text evolves: denial → acceptance (slow arc) ───
+  const noTexts = [
+    'no',       // 1
+    'no',       // 2
+    'no',       // 3
+    'no?',      // 4
+    'no?',      // 5
+    'no..?',    // 6
+    'no..?',    // 7
+    'hmm',      // 8
+    'hmm',      // 9
+    'maybe',    // 10
+    'maybe?',   // 11
+    'well',     // 12
+    'fine',     // 13
+    'okay',     // 14
+    'okay',     // 15
+    'yes',      // 16
+    'yes',      // 17
+    'YES',      // 18
+  ];
 
-document.body.addEventListener("click", ()=>{
-    music.play().catch(()=>{});
-},{ once:true });
+  // ─── Whisper messages ───
+  const whispers = [
+    '',
+    '',
+    '',
+    'hmm, that one is not really an option',
+    '',
+    'you already know the answer',
+    '',
+    'it is getting nervous',
+    '',
+    'just say yes',
+    '',
+    'look how pretty the yes button is now',
+    'it knows you want to say yes',
+    '',
+    'even the no is coming around',
+    '',
+    'i will wait',
+    'it is always going to be yes',
+    '',
+    'the only real answer was always yes',
+  ];
 
-// No button dodges cursor
-noBtn.addEventListener("mouseenter", ()=>{
-    const padding = 100;
-    const x = Math.random() * (window.innerWidth - padding);
-    const y = Math.random() * (window.innerHeight - padding);
+  // ─── Audio ───
+  function startMusic() {
+    if (musicStarted) return;
+    musicStarted = true;
+    bgMusic.volume = 0;
+    bgMusic.play().then(() => {
+      musicPlaying = true;
+      audioToggle.classList.add('visible');
+      let vol = 0;
+      const fade = setInterval(() => {
+        vol = Math.min(vol + 0.015, 0.35);
+        bgMusic.volume = vol;
+        if (vol >= 0.35) clearInterval(fade);
+      }, 60);
+    }).catch(() => { musicStarted = false; });
+  }
 
-    noBtn.style.left = x + "px";
-    noBtn.style.top = y + "px";
+  audioToggle.addEventListener('click', () => {
+    if (!musicStarted) return;
+    if (musicPlaying) {
+      bgMusic.pause();
+      musicPlaying = false;
+      audioToggle.classList.add('muted');
+    } else {
+      bgMusic.play();
+      musicPlaying = true;
+      audioToggle.classList.remove('muted');
+    }
+  });
 
-    scale += 0.12;
-    yesBtn.style.transform = `scale(${scale})`;
-});
+  document.addEventListener('click', startMusic, { once: true });
+  document.addEventListener('touchstart', startMusic, { once: true });
 
-// Yes clicked
+  // ─── Random position (avoids yes button) ───
+  function getRandomPosition() {
+    const vw   = window.innerWidth;
+    const vh   = window.innerHeight;
+    const btnW = noBtn.offsetWidth || 80;
+    const btnH = noBtn.offsetHeight || 40;
+    const pad  = 14;
+    const yesRect = yesBtn.getBoundingClientRect();
 
-yesBtn.addEventListener("click", ()=>{
-    successMsg.classList.add("show");
-    yesBtn.style.opacity = "0.6";
-    yesBtn.innerText = "see you tonight";
-});
+    let x, y, tries = 0;
+    do {
+      x = pad + Math.random() * (vw - btnW - pad * 2);
+      y = pad + Math.random() * (vh - btnH - pad * 2);
+      tries++;
+    } while (
+      tries < 40 &&
+      x < yesRect.right + 50 && x + btnW > yesRect.left - 50 &&
+      y < yesRect.bottom + 50 && y + btnH > yesRect.top - 50
+    );
 
+    return { x, y };
+  }
+
+  // ─── Evolve Yes: grows, glows, becomes irresistible ───
+  function evolveYes() {
+    const t = attempts;
+
+    // Scale grows (slower)
+    const scale = Math.min(1 + t * 0.028, 1.5);
+    yesBtn.style.transform = 'scale(' + scale + ')';
+
+    // Padding expands (slower)
+    const padH = Math.min(2.8 + t * 0.09, 4.5);
+    const padV = Math.min(0.9 + t * 0.02, 1.35);
+    yesBtn.style.padding = padV + 'rem ' + padH + 'rem';
+
+    // Glow intensifies (slower)
+    const glowSize    = Math.min(16 + t * 2.5, 50);
+    const glowOpacity = Math.min(0.25 + t * 0.02, 0.6);
+    yesBtn.style.boxShadow = '0 4px ' + glowSize + 'px rgba(212, 160, 144, ' + glowOpacity + ')';
+
+    // After 8 attempts: add breathing pulse
+    if (t >= 8) {
+      yesBtn.style.animation = 'pulseGlow 2.5s ease-in-out infinite';
+    }
+
+    // After 12 attempts: soft glow ring appears
+    if (t >= 12) {
+      yesBtn.style.outline = '1.5px solid rgba(212, 160, 144, 0.35)';
+      yesBtn.style.outlineOffset = Math.min(4 + (t - 12) * 2, 12) + 'px';
+    }
+
+    // After 16 attempts: slightly warmer background
+    if (t >= 16) {
+      yesBtn.style.background = '#CB8A7E';
+    }
+  }
+
+  // ─── Evolve No: shrinks, panics, converts, vanishes ───
+  function evolveNo() {
+    const t = attempts;
+
+    // Update text (denial → acceptance arc)
+    const textIdx = Math.min(t, noTexts.length - 1);
+    noBtn.textContent = noTexts[textIdx];
+
+    // Shrink font (gradual)
+    const fontSize = Math.max(0.95 - t * 0.018, 0.5);
+    noBtn.style.fontSize = fontSize + 'rem';
+
+    // Shrink padding (gradual)
+    const padH = Math.max(2.4 - t * 0.07, 0.7);
+    const padV = Math.max(0.9 - t * 0.02, 0.3);
+    noBtn.style.padding = padV + 'rem ' + padH + 'rem';
+
+    // Fade opacity (gradual)
+    const opacity = Math.max(1 - t * 0.03, 0.2);
+    noBtn.style.opacity = opacity;
+
+    // Border fades (gradual)
+    const borderOpacity = Math.max(0.6 - t * 0.02, 0.1);
+    noBtn.style.borderColor = 'rgba(201, 181, 172, ' + borderOpacity + ')';
+
+    // Wobble rotation after attempt 8
+    if (t >= 8) {
+      const wobble = Math.min((t - 7) * 3, 20);
+      const dir = Math.random() > 0.5 ? 1 : -1;
+      noBtn.style.transform = 'rotate(' + (dir * wobble) + 'deg)';
+    }
+
+    // Speed classes (later thresholds)
+    noBtn.classList.remove('moving', 'fast', 'frantic');
+    if (t >= 15)     noBtn.classList.add('frantic');
+    else if (t >= 9) noBtn.classList.add('fast');
+    else             noBtn.classList.add('moving');
+
+    // After 20 attempts: no button surrenders and vanishes
+    if (t >= 20 && !escaped) {
+      escaped = true;
+      noBtn.style.transition = 'all 0.8s cubic-bezier(0.4, 0, 0.2, 1)';
+      noBtn.style.opacity = '0';
+      noBtn.style.transform = 'scale(0.2) rotate(40deg)';
+      setTimeout(() => { noBtn.style.display = 'none'; }, 900);
+    }
+  }
+
+  // ─── Whisper ───
+  function showWhisper() {
+    const idx = Math.min(attempts, whispers.length - 1);
+    if (!whispers[idx]) return;
+
+    whisper.classList.add('swap');
+    setTimeout(() => {
+      whisper.textContent = whispers[idx];
+      whisper.classList.remove('swap');
+      whisper.classList.add('visible');
+    }, 200);
+  }
+
+  // ─── Dodge ───
+  function dodgeNo() {
+    if (escaped) return;
+    attempts++;
+
+    // First dodge: pop out of normal flow into fixed position
+    if (attempts === 1) {
+      const rect = noBtn.getBoundingClientRect();
+      noBtn.style.position = 'fixed';
+      noBtn.style.left = rect.left + 'px';
+      noBtn.style.top  = rect.top + 'px';
+      noBtn.style.margin = '0';
+      noBtn.classList.add('moving');
+
+      // Let transition class apply before moving
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          moveTo();
+        });
+      });
+    } else {
+      moveTo();
+    }
+
+    function moveTo() {
+      const pos = getRandomPosition();
+      noBtn.style.left = pos.x + 'px';
+      noBtn.style.top  = pos.y + 'px';
+    }
+
+    evolveNo();
+    evolveYes();
+    showWhisper();
+  }
+
+  // ─── Events: No is never clickable ───
+  noBtn.addEventListener('mouseenter', dodgeNo);
+
+  noBtn.addEventListener('touchstart', function(e) {
+    e.preventDefault();
+    dodgeNo();
+  }, { passive: false });
+
+  noBtn.addEventListener('click', function(e) {
+    e.preventDefault();
+    dodgeNo();
+  });
+
+  // ─── Floating hearts for yes scene ───
+  function createFloatingHearts() {
+    for (let i = 0; i < 8; i++) {
+      const heart = document.createElement('div');
+      heart.classList.add('heart-float');
+      const size = 12 + Math.random() * 18;
+      heart.innerHTML = '<svg width="' + size + '" height="' + size + '" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>';
+      const left     = 8 + Math.random() * 84;
+      const delay    = i * 0.8 + Math.random() * 2;
+      const duration = 8 + Math.random() * 7;
+      heart.style.cssText = 'left:' + left + '%;bottom:-30px;animation:floatUp ' + duration + 's ease-in ' + delay + 's forwards;';
+      document.body.appendChild(heart);
+    }
+  }
+
+  // ─── Yes ───
+  yesBtn.addEventListener('click', function() {
+    askScene.classList.add('exit');
+    whisper.classList.remove('visible');
+
+    if (!escaped) {
+      noBtn.style.transition = 'opacity 0.5s ease';
+      noBtn.style.opacity = '0';
+    }
+
+    setTimeout(function() {
+      askScene.classList.add('hidden');
+      yesScene.classList.remove('hidden');
+      createFloatingHearts();
+    }, 700);
+  });
+
+})();
 </script>
 
 </body>
