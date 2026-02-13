@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -526,25 +525,39 @@
   document.addEventListener('click', startMusic, { once: true });
   document.addEventListener('touchstart', startMusic, { once: true });
 
-  // ─── Random position (avoids yes button) ───
+  // ─── Random position (stays fully inside viewport, avoids yes button) ───
   function getRandomPosition() {
     const vw   = window.innerWidth;
     const vh   = window.innerHeight;
     const btnW = noBtn.offsetWidth || 80;
     const btnH = noBtn.offsetHeight || 40;
-    const pad  = 14;
+    const margin = 20;
     const yesRect = yesBtn.getBoundingClientRect();
+
+    const minX = margin;
+    const maxX = vw - btnW - margin;
+    const minY = margin;
+    const maxY = vh - btnH - margin;
+
+    // Safety: if screen too small, just center it somewhere
+    if (maxX <= minX || maxY <= minY) {
+      return { x: margin, y: margin };
+    }
 
     let x, y, tries = 0;
     do {
-      x = pad + Math.random() * (vw - btnW - pad * 2);
-      y = pad + Math.random() * (vh - btnH - pad * 2);
+      x = minX + Math.random() * (maxX - minX);
+      y = minY + Math.random() * (maxY - minY);
       tries++;
     } while (
-      tries < 40 &&
+      tries < 50 &&
       x < yesRect.right + 50 && x + btnW > yesRect.left - 50 &&
       y < yesRect.bottom + 50 && y + btnH > yesRect.top - 50
     );
+
+    // Clamp as final safety net
+    x = Math.max(minX, Math.min(x, maxX));
+    y = Math.max(minY, Math.min(y, maxY));
 
     return { x, y };
   }
@@ -730,4 +743,3 @@
 
 </body>
 </html>
-
