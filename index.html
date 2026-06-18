@@ -1,1 +1,730 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Understanding QNU Labs — An In-Depth Guide to Quantum Security</title>
+<style>
+  :root{
+    --ink:#1a2233; --soft:#5a6577; --line:#e3e8f0; --bg:#ffffff;
+    --blue:#1f6feb; --blue-d:#0b4fc0; --teal:#0f9d8f; --amber:#e8a33d;
+    --red:#d6453d; --green:#2f9e5e; --violet:#7c4dff; --panel:#f6f8fc;
+    --panel2:#eef3fb;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    line-height:1.62; font-size:17px;
+  }
+  .wrap{max-width:900px; margin:0 auto; padding:0 22px 120px}
+  header.hero{
+    background:linear-gradient(135deg,#0b1f4d 0%,#103a8a 55%,#1f6feb 100%);
+    color:#fff; padding:64px 22px 56px; text-align:center;
+  }
+  header.hero .inner{max-width:900px;margin:0 auto}
+  header.hero .tag{
+    display:inline-block; font-size:12.5px; letter-spacing:.18em; text-transform:uppercase;
+    background:rgba(255,255,255,.15); padding:6px 14px; border-radius:30px; margin-bottom:18px;
+  }
+  header.hero h1{font-size:33px; line-height:1.22; margin:0 0 14px; font-weight:700}
+  header.hero p{font-size:17px; color:#d6e2ff; margin:0 auto; max-width:660px}
+  header.hero .meta{margin-top:18px; font-size:13px; color:#a9c4ff; letter-spacing:.04em}
+  .toc{
+    background:var(--panel); border:1px solid var(--line); border-radius:14px;
+    padding:22px 26px; margin:40px 0 10px;
+  }
+  .toc h3{margin:0 0 10px; font-size:15px; text-transform:uppercase; letter-spacing:.08em; color:var(--soft)}
+  .toc ol{margin:0; padding-left:20px; columns:2; column-gap:34px}
+  @media(max-width:680px){.toc ol{columns:1}}
+  .toc a{color:var(--blue-d); text-decoration:none}
+  .toc a:hover{text-decoration:underline}
+  h2.part{
+    font-size:26px; margin:64px 0 6px; padding-top:16px; color:var(--ink);
+    border-top:3px solid var(--blue); display:inline-block;
+  }
+  .partlabel{font-size:13px; letter-spacing:.14em; text-transform:uppercase; color:var(--blue); font-weight:700; margin-top:54px}
+  h3{font-size:20px; margin:34px 0 8px; color:var(--ink)}
+  h4{font-size:16.5px; margin:22px 0 6px; color:var(--blue-d)}
+  p{margin:10px 0}
+  ul,ol{margin:10px 0; padding-left:22px}
+  li{margin:7px 0}
+  .lead{font-size:18px; color:var(--soft)}
+  strong{font-weight:650}
+  .callout{
+    background:var(--panel2); border-left:4px solid var(--blue); border-radius:8px;
+    padding:14px 18px; margin:18px 0; font-size:16px;
+  }
+  .callout.amber{background:#fdf6e9; border-color:var(--amber)}
+  .callout.red{background:#fdeeed; border-color:var(--red)}
+  .callout.green{background:#eef8f1; border-color:var(--green)}
+  .key{font-weight:650; color:var(--blue-d)}
+  figure{margin:26px 0; text-align:center}
+  figure svg{max-width:100%; height:auto; border:1px solid var(--line); border-radius:12px; background:#fff}
+  figcaption{font-size:13.5px; color:var(--soft); margin-top:8px; font-style:italic}
+  .pillgrid{display:grid; grid-template-columns:1fr 1fr 1fr; gap:14px; margin:22px 0}
+  .pill{background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:16px}
+  .pill h4{margin:0 0 6px}
+  .pill .ic{font-size:22px}
+  @media(max-width:680px){.pillgrid{grid-template-columns:1fr}}
+  table{border-collapse:collapse; width:100%; margin:20px 0; font-size:15px}
+  th,td{border:1px solid var(--line); padding:9px 11px; text-align:left; vertical-align:top}
+  th{background:var(--panel2); font-weight:650}
+  code{background:var(--panel2); padding:2px 6px; border-radius:5px; font-size:15px; font-family:"SF Mono",Menlo,Consolas,monospace}
+  .mono{font-family:"SF Mono",Menlo,Consolas,monospace; background:var(--panel); padding:12px 16px; border-radius:8px; display:block; white-space:pre; overflow-x:auto; font-size:14.5px; margin:14px 0}
+  .divider{height:1px;background:var(--line);margin:40px 0}
+  .note-final{background:linear-gradient(135deg,#0b1f4d,#1f6feb); color:#fff; border-radius:14px; padding:26px 28px; margin:40px 0}
+  .note-final h3{color:#fff; margin-top:0}
+  .note-final a{color:#bcd4ff}
+  .src{font-size:13px; color:var(--soft)}
+  .anchor{display:block; position:relative; top:-20px; visibility:hidden}
+  .statrow{display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin:22px 0}
+  @media(max-width:680px){.statrow{grid-template-columns:1fr 1fr}}
+  .stat{background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:14px; text-align:center}
+  .stat .n{font-size:24px; font-weight:700; color:var(--blue-d)}
+  .stat .l{font-size:12.5px; color:var(--soft); margin-top:3px}
+  .tip{font-size:14.5px; color:var(--soft); margin:6px 0 0}
+</style>
+</head>
+<body>
 
+<header class="hero">
+  <div class="inner">
+    <span class="tag">An In-Depth Guide</span>
+    <h1>From RSA to Quantum to QNU Labs</h1>
+    <p>How digital security worked before quantum, how quantum computing threatens it, what governments and the industry are building to fight back — and exactly where QNU Labs fits in. Written ground-up, in plain language.</p>
+    <div class="meta">Educational briefing · compiled mid-2026 · for evaluating QNU Labs</div>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <div class="toc">
+    <h3>Contents</h3>
+    <ol>
+      <li><a href="#part1">Part 1 — Security before quantum (RSA)</a></li>
+      <li><a href="#part2">Part 2 — Quantum computing, from scratch</a></li>
+      <li><a href="#part3">Part 3 — The threat &amp; "Q-Day"</a></li>
+      <li><a href="#part4">Part 4 — The world's answer (PQC, QKD, NIST)</a></li>
+      <li><a href="#part5">Part 5 — What governments are doing</a></li>
+      <li><a href="#part6">Part 6 — Market &amp; competitors</a></li>
+      <li><a href="#part7">Part 7 — QNU Labs: company &amp; products</a></li>
+      <li><a href="#part8">Part 8 — The investor lens</a></li>
+      <li><a href="#glossary">Glossary</a></li>
+    </ol>
+  </div>
+
+  <p class="lead">A quick map before we start: today's security stands on a math puzzle normal computers can't solve. Quantum computers will eventually solve it. So the world is switching to new defences before that day arrives — and governments are now <em>mandating</em> the switch. QNU Labs builds those defences. Everything below unpacks that, layer by layer.</p>
+
+  <!-- ============================ PART 1 ============================ -->
+  <span id="part1" class="anchor"></span>
+  <div class="partlabel">Part One</div>
+  <h2 class="part">How security worked before quantum — RSA</h2>
+
+  <h3>Start with a simple question</h3>
+  <p>Imagine someone hands you this challenge:</p>
+  <ul>
+    <li>Here are two prime numbers. <span class="key">Multiply them</span> — easy or hard?</li>
+    <li>Here is the answer to a multiplication. <span class="key">Tell me which two primes made it</span> — easy or hard?</li>
+  </ul>
+  <p>Everyone answers the same way: multiplying is easy, going backwards is hard. And the crucial point — <strong>computers feel exactly the same.</strong> A computer multiplies two huge numbers instantly. But handed only the result, finding the two original primes ("factoring") is brutally slow.</p>
+
+  <div class="callout">
+    Now picture the numbers being <span class="key">300+ digits long each</span>. Multiplying them still takes a fraction of a second. But to "un-multiply" the ~600-digit product back into its two primes, the fastest normal computers on Earth would need <span class="key">longer than the age of the universe</span>. That single gap is where internet security lived for ~50 years.
+  </div>
+
+  <figure>
+    <svg viewBox="0 0 760 230" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system,Segoe UI,Roboto,sans-serif">
+      <rect x="40" y="40" width="200" height="60" rx="10" fill="#eef3fb" stroke="#1f6feb"/>
+      <text x="140" y="66" text-anchor="middle" font-size="15" fill="#0b4fc0">61  ×  53</text>
+      <text x="140" y="86" text-anchor="middle" font-size="12" fill="#5a6577">two primes</text>
+      <rect x="520" y="40" width="200" height="60" rx="10" fill="#eef3fb" stroke="#1f6feb"/>
+      <text x="620" y="74" text-anchor="middle" font-size="16" fill="#0b4fc0">3,233</text>
+      <line x1="245" y1="70" x2="515" y2="70" stroke="#2f9e5e" stroke-width="3" marker-end="url(#a1)"/>
+      <text x="380" y="58" text-anchor="middle" font-size="13" fill="#2f9e5e">EASY  →  multiply (instant)</text>
+      <line x1="515" y1="150" x2="245" y2="150" stroke="#d6453d" stroke-width="3" marker-end="url(#a2)"/>
+      <text x="380" y="172" text-anchor="middle" font-size="13" fill="#d6453d">HARD  ←  factor back (≈ age of universe)</text>
+      <rect x="40" y="125" width="200" height="50" rx="10" fill="#fff" stroke="#d6453d" stroke-dasharray="4 3"/>
+      <text x="140" y="155" text-anchor="middle" font-size="13" fill="#d6453d">which two primes?</text>
+      <rect x="520" y="125" width="200" height="50" rx="10" fill="#fff" stroke="#5a6577"/>
+      <text x="620" y="155" text-anchor="middle" font-size="14" fill="#1a2233">3,233</text>
+      <defs>
+        <marker id="a1" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#2f9e5e"/></marker>
+        <marker id="a2" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#d6453d"/></marker>
+      </defs>
+    </svg>
+    <figcaption>The one-way street: multiplying primes is trivial; reversing it is practically impossible for a normal computer. RSA's entire security rests on this asymmetry.</figcaption>
+  </figure>
+
+  <h3>The padlock idea: public and private keys</h3>
+  <p>Before RSA, all encryption was <span class="key">symmetric</span> — the same key locked and unlocked, so two people had to <em>share that key in advance</em> (armies literally carried codebooks in locked briefcases). The unsolved problem for 2,000 years: how do you share the key over an unsafe channel without an eavesdropper grabbing it?</p>
+  <p>RSA (1977) solved it with <span class="key">asymmetric</span> keys — splitting the key into two halves:</p>
+  <ul>
+    <li><span class="key">Public key</span> = an <strong>open padlock</strong>. You hand it to the whole world. It can only <em>lock</em>.</li>
+    <li><span class="key">Private key</span> = the <strong>one key</strong> that opens those padlocks. You never share it.</li>
+  </ul>
+  <p>Anyone can snap your padlock shut on a message; only you can open it. The padlock being public doesn't help an attacker — a padlock can only lock. Suddenly strangers could exchange secrets over open lines without ever meeting. That is what made the internet possible.</p>
+
+  <h4>The actual numbers — and where the secret hides</h4>
+  <ul>
+    <li>Bank picks two secret primes: <code>61</code> and <code>53</code>.</li>
+    <li>Multiplies them: <code>61 × 53 = 3,233</code>. This product is made <span class="key">public</span>.</li>
+    <li>There's a public "locking number" (<code>e = 17</code>) and a private "unlocking number" (<code>d = 2,753</code>).</li>
+  </ul>
+  <span class="mono">Lock the secret "8":   8^17   mod 3233  =  2041   ← travels the internet
+Unlock it:             2041^2753 mod 3233 =  8     ← only the bank can do this</span>
+
+  <h4>Where does d = 2,753 come from? (one layer deeper)</h4>
+  <p>Think of locking and unlocking as turning a dial around a circle. Raising to the power <code>e</code> spins the dial part-way; raising to <code>d</code> spins it the rest of the way, completing the loop and landing back on the original number. For that to work, <code>d</code> must satisfy a condition built from the primes:</p>
+  <ul>
+    <li>Subtract 1 from each prime and multiply: <code>(61−1) × (53−1) = 60 × 52 = 3,120</code> — the secret "circle size."</li>
+    <li>Pick <code>d</code> so that <code>17 × d</code> is one more than a whole number of loops: <code>17 × 2,753 = 46,801 = (15 × 3,120) + 1</code>. That "+1" lands you back on the start.</li>
+  </ul>
+  <div class="callout">
+    The whole secret is this: computing <code>d</code> needs <code>3,120</code>, which needs the two primes <code>61</code> and <code>53</code>. An attacker sees only the public <code>3,233</code>. To get <code>d</code>, they must first factor <code>3,233</code> back into its primes — the "age of the universe" problem. <strong>That is why RSA was never cracked.</strong>
+  </div>
+  <p class="tip">Real RSA keys are typically <strong>2,048 bits</strong> (about 617 digits) — which is why the padlock icon 🔒 in your browser has been safe for decades.</p>
+
+  <h3>The clever part: RSA delivers a key, it doesn't lock your data</h3>
+  <p>RSA math is slow, so it is <em>not</em> used to scramble your messages. It's used once, to deliver a small key. Then a fast cipher (AES) does the heavy lifting. This is the <span class="key">hybrid system</span> every website uses.</p>
+
+  <figure>
+    <svg viewBox="0 0 760 250" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system,Segoe UI,Roboto,sans-serif">
+      <rect x="30" y="30" width="150" height="50" rx="9" fill="#eef3fb" stroke="#1f6feb"/>
+      <text x="105" y="52" text-anchor="middle" font-size="13" fill="#0b4fc0">You make a small</text>
+      <text x="105" y="70" text-anchor="middle" font-size="13" fill="#0b4fc0">random key</text>
+      <rect x="305" y="30" width="170" height="50" rx="9" fill="#fdf6e9" stroke="#e8a33d"/>
+      <text x="390" y="52" text-anchor="middle" font-size="13" fill="#a9741b">Lock it inside the</text>
+      <text x="390" y="70" text-anchor="middle" font-size="13" fill="#a9741b">bank's RSA padlock</text>
+      <rect x="600" y="30" width="150" height="50" rx="9" fill="#eef8f1" stroke="#2f9e5e"/>
+      <text x="675" y="52" text-anchor="middle" font-size="13" fill="#1f7a45">Bank opens it,</text>
+      <text x="675" y="70" text-anchor="middle" font-size="13" fill="#1f7a45">gets the small key</text>
+      <line x1="182" y1="55" x2="303" y2="55" stroke="#5a6577" stroke-width="2.5" marker-end="url(#b1)"/>
+      <line x1="477" y1="55" x2="598" y2="55" stroke="#5a6577" stroke-width="2.5" marker-end="url(#b1)"/>
+      <rect x="200" y="150" width="360" height="66" rx="10" fill="#f6f8fc" stroke="#7c4dff"/>
+      <text x="380" y="178" text-anchor="middle" font-size="14" fill="#5a2fd6">Now BOTH share the same small key →</text>
+      <text x="380" y="200" text-anchor="middle" font-size="14" fill="#5a2fd6">it locks ALL the real data (fast AES)</text>
+      <line x1="675" y1="82" x2="560" y2="170" stroke="#7c4dff" stroke-width="2" marker-end="url(#b2)"/>
+      <line x1="105" y1="82" x2="200" y2="175" stroke="#7c4dff" stroke-width="2" marker-end="url(#b2)"/>
+      <defs>
+        <marker id="b1" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#5a6577"/></marker>
+        <marker id="b2" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#7c4dff"/></marker>
+      </defs>
+    </svg>
+    <figcaption>The hybrid system. RSA is the "armoured truck" used once to deliver a small key. That small key then locks the actual data with fast everyday encryption (AES).</figcaption>
+  </figure>
+
+  <ul>
+    <li><strong>Big lock (RSA)</strong> = armoured truck. Used once, carries only a tiny key.</li>
+    <li><strong>Small lock (AES)</strong> = the lock on your actual data. Fast, does all the real work, and is largely quantum-safe on its own.</li>
+    <li>One RSA padlock per website, reused by everyone. A <strong>fresh small key per conversation</strong>, thrown away after.</li>
+  </ul>
+  <div class="callout">
+    Remember this split — it's the whole game later: the attacker won't bother with your data lock. They go after the <span class="key">armoured truck (RSA)</span>. Crack that, get the small key, and everything inside falls open.
+  </div>
+
+  <!-- ============================ PART 2 ============================ -->
+  <span id="part2" class="anchor"></span>
+  <div class="partlabel">Part Two</div>
+  <h2 class="part">Quantum computing, from scratch</h2>
+
+  <p>RSA is safe only because normal computers are too slow to factor big numbers. Quantum computers are a fundamentally different kind of machine — and on this exact problem, they are <em>not</em> slow.</p>
+
+  <h3>A qubit vs. an ordinary bit</h3>
+  <ul>
+    <li>A normal computer thinks in <span class="key">bits</span> — each is either <code>0</code> or <code>1</code>. Like a coin lying flat.</li>
+    <li>A quantum computer uses <span class="key">qubits</span>. Thanks to <strong>superposition</strong>, a qubit can be a blend of 0 and 1 at once — like a coin still spinning, not yet landed.</li>
+  </ul>
+
+  <figure>
+    <svg viewBox="0 0 760 200" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system,Segoe UI,Roboto,sans-serif">
+      <text x="190" y="34" text-anchor="middle" font-size="15" fill="#1a2233" font-weight="600">Bit (normal computer)</text>
+      <circle cx="120" cy="100" r="34" fill="#eef3fb" stroke="#1f6feb"/><text x="120" y="106" text-anchor="middle" font-size="20" fill="#0b4fc0">0</text>
+      <text x="120" y="158" text-anchor="middle" font-size="12" fill="#5a6577">OR</text>
+      <circle cx="260" cy="100" r="34" fill="#eef3fb" stroke="#1f6feb"/><text x="260" y="106" text-anchor="middle" font-size="20" fill="#0b4fc0">1</text>
+      <text x="190" y="180" text-anchor="middle" font-size="12" fill="#5a6577">one fixed value at a time</text>
+      <line x1="380" y1="40" x2="380" y2="175" stroke="#e3e8f0" stroke-width="2"/>
+      <text x="575" y="34" text-anchor="middle" font-size="15" fill="#1a2233" font-weight="600">Qubit (quantum computer)</text>
+      <circle cx="575" cy="100" r="46" fill="#f3eeff" stroke="#7c4dff"/><text x="575" y="96" text-anchor="middle" font-size="18" fill="#5a2fd6">0 &amp; 1</text>
+      <text x="575" y="118" text-anchor="middle" font-size="12" fill="#5a2fd6">at once</text>
+      <text x="575" y="180" text-anchor="middle" font-size="12" fill="#5a6577">a spinning coin — a blend of both</text>
+    </svg>
+    <figcaption>Superposition: a qubit holds many possibilities at once, where a bit holds just one.</figcaption>
+  </figure>
+
+  <h3>Why qubits get powerful so fast</h3>
+  <ul>
+    <li>3 ordinary bits hold <strong>one</strong> of 8 combinations at a time. 3 qubits hold <strong>all 8 at once</strong>.</li>
+    <li>It doubles with every qubit: 10 → ~1,000; 20 → ~1 million; 50 → ~1 quadrillion; 300 → more than there are atoms in the universe.</li>
+    <li>This <span class="key">exponential</span> explosion is the power: a quantum computer explores a huge ocean of possibilities together, not one at a time.</li>
+  </ul>
+
+  <h3>The second ingredient: entanglement</h3>
+  <ul>
+    <li>Superposition alone gives independent spinning coins — not useful by itself.</li>
+    <li><span class="key">Entanglement</span> links qubits so they share a single "fate" — measuring one instantly tells you about the other. This lets them <strong>cooperate</strong> into one real computation. (Einstein called it "spooky action at a distance.")</li>
+    <li>Superposition = horsepower. Entanglement = the transmission. You need both.</li>
+  </ul>
+
+  <h3>Why this is so hard to build</h3>
+  <ul>
+    <li><strong>Measurement collapses it.</strong> Looking at a quantum state forces it to "land" on ordinary 0s/1s — the magic vanishes. Algorithms must be choreographed so the right answer survives the final measurement.</li>
+    <li><strong>Qubits are absurdly fragile (decoherence).</strong> A stray vibration or hint of heat destroys the state in millionths of a second — hence the shielding chilled colder than outer space.</li>
+  </ul>
+
+  <h4>The golden "chandelier" myth</h4>
+  <p>That famous gold object you've seen is <strong>not the computer</strong> — it's a dilution <em>refrigerator</em> (cooling plumbing and wiring) that keeps the chip near absolute zero. The actual processor is a tiny chip — coin-sized — dangling at the very bottom, holding <em>all</em> the qubits as microscopic circuits. The whole massive apparatus exists just to babysit that one twitchy chip. (Atom- and photon-based machines look completely different — more like an optics lab.)</p>
+
+  <h3>How you add a qubit — and why it's so hard to scale</h3>
+  <ul>
+    <li>On the leading <strong>superconducting</strong> type, a qubit is a tiny circuit etched on a chip — like a transistor, but vastly more demanding. Adding qubits means designing a whole <em>new chip</em> with more circuits.</li>
+    <li>Each qubit needs its own control wiring, readout line, and links to neighbours — the <span class="key">"wiring bottleneck."</span> Cramming more cables into a coin-sized chip near absolute zero adds heat and crosstalk. So qubits scale into the <em>hundreds</em>, not the billions like transistors.</li>
+    <li><strong>Why not just network many cheap chips?</strong> Because chips must <em>share entanglement</em> to act as one computer — and entanglement can't travel an ordinary wire (you can't copy or amplify a quantum state). Linking chips needs fragile "quantum interconnects," still a major research frontier.</li>
+  </ul>
+
+  <h3>Physical vs. logical qubits — the number that really matters</h3>
+  <ul>
+    <li>A <span class="key">physical qubit</span> is the raw hardware thing — real, but noisy and error-prone.</li>
+    <li>A <span class="key">logical qubit</span> is a <strong>team of many physical qubits</strong> that constantly check each other for errors (using entanglement), acting as one reliable qubit. Like writing a number on 1,000 sticky notes so a few smudges don't matter.</li>
+    <li>Historically ~<strong>1,000 physical : 1 logical</strong>, now improving toward ~100:1. So a chip with hundreds of physical qubits has only a handful of <em>reliable</em> ones.</li>
+  </ul>
+  <div class="callout amber">
+    Every "1,000-qubit!" headline means <span class="key">physical</span> qubits — fragile ones. The trustworthy (logical) count is dramatically smaller. Closing that gap is the entire race.
+  </div>
+
+  <h3>The types of qubits — the horse race</h3>
+  <table>
+    <tr><th>Type</th><th>How a qubit is made</th><th>Trade-off</th></tr>
+    <tr><td>Superconducting (IBM, Google)</td><td>Tiny chilled circuit on a chip</td><td>Fast, most mature, biggest counts — but noisy, wiring bottleneck</td></tr>
+    <tr><td>Trapped ion (IonQ, Quantinuum)</td><td>Individual atoms held by fields + lasers</td><td>Very accurate, long-lived — but slower, fewer qubits</td></tr>
+    <tr><td>Neutral atom (QuEra, Pasqal)</td><td>Atoms held by "laser tweezers"</td><td>Scales to large arrays of identical qubits — rising fast in 2026</td></tr>
+    <tr><td>Photonic (PsiQuantum, Xanadu)</td><td>Individual photons of light</td><td>Less cooling, networks well — earlier stage</td></tr>
+  </table>
+
+  <h3>Can ordinary people use a quantum computer? Yes — on the cloud</h3>
+  <ul>
+    <li>You don't own one — you <span class="key">rent time over the internet</span> (IBM, AWS Braket, Microsoft Azure, Google). Write a small program in Python (Qiskit), submit, get results in minutes.</li>
+    <li>Learning is essentially <strong>free</strong> (open tiers). Real machine-time is pricey: IBM ≈ $96/min; AWS ≈ $300 for a 10,000-run job on an ion machine, ≈ $5 on a superconducting one. Owning one costs millions.</li>
+    <li>So <em>access</em> is democratized — but <em>useful</em> quantum computing isn't yet. Today's machines still can't beat a laptop on real problems.</li>
+  </ul>
+
+  <h3>Where we actually stand in 2026</h3>
+  <ul>
+    <li>IBM has built superconducting chips past <strong>1,000 physical qubits</strong> (Condor, 1,121), but is deliberately pivoting to smaller, <em>better-connected, higher-quality</em> chips — quality over raw count.</li>
+    <li>Google's "Willow" line (~100–1,000 physical) showed a landmark in 2024–25: adding physical qubits actually <em>lowered</em> the logical error rate — crossing the long-sought "break-even" threshold.</li>
+    <li>The field is described as moving from the noisy "NISQ" era toward early <strong>fault-tolerant</strong> computing. IBM publicly targets "verified quantum advantage" by end-2026 and ~200 logical qubits by decade's end.</li>
+  </ul>
+
+  <!-- ============================ PART 3 ============================ -->
+  <span id="part3" class="anchor"></span>
+  <div class="partlabel">Part Three</div>
+  <h2 class="part">The threat &amp; "Q-Day"</h2>
+
+  <h3>How quantum breaks RSA — Shor's algorithm</h3>
+  <ul>
+    <li>In 1994, Peter Shor showed a big enough quantum computer could do RSA's "impossible backward step" — factoring the public number into its two secret primes — <strong>quickly</strong>, using superposition to test the problem's structure in parallel.</li>
+    <li>RSA's security was always just an <em>assumption</em> ("factoring is hard"). Shor showed it's only hard <strong>for normal computers</strong>.</li>
+    <li>The catch: it needs a machine far larger than anything today — roughly <strong>~4,000 logical</strong> qubits, which at today's overhead means <strong>100,000–1,000,000 physical</strong>. We have hundreds. So RSA is <em>not</em> broken yet.</li>
+  </ul>
+  <p>But notice the trajectory of how many qubits it's <em>estimated</em> to take — it keeps falling as the math improves:</p>
+  <div class="statrow">
+    <div class="stat"><div class="n">20M</div><div class="l">physical qubits (2019 estimate)</div></div>
+    <div class="stat"><div class="n">&lt;1M</div><div class="l">physical qubits (2025, Gidney)</div></div>
+    <div class="stat"><div class="n">&lt;100k</div><div class="l">physical qubits (2026 claim)</div></div>
+    <div class="stat"><div class="n">~hundreds</div><div class="l">physical qubits we have today</div></div>
+  </div>
+  <p class="tip">Each reduction buys it by making other parts of the engineering harder — but the direction is clear, and that's what matters for planning.</p>
+
+  <h3>The convergence toward "Q-Day"</h3>
+  <p>Two lines move toward each other: machine capability <strong>rising</strong>, and the qubits <strong>needed</strong> to break RSA falling. The year they realistically meet is nicknamed <span class="key">Q-Day</span> — most serious estimates land in the <strong>early-to-mid 2030s</strong>.</p>
+
+  <figure>
+    <svg viewBox="0 0 760 380" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system,Segoe UI,Roboto,sans-serif">
+      <line x1="70" y1="320" x2="710" y2="320" stroke="#1a2233" stroke-width="1.5"/>
+      <line x1="70" y1="40" x2="70" y2="320" stroke="#1a2233" stroke-width="1.5"/>
+      <text x="390" y="360" text-anchor="middle" font-size="13" fill="#5a6577">Year</text>
+      <text x="24" y="180" text-anchor="middle" font-size="13" fill="#5a6577" transform="rotate(-90 24 180)">Qubits (log scale)</text>
+      <text x="110" y="338" text-anchor="middle" font-size="11" fill="#5a6577">2016</text>
+      <text x="230" y="338" text-anchor="middle" font-size="11" fill="#5a6577">2019</text>
+      <text x="350" y="338" text-anchor="middle" font-size="11" fill="#5a6577">2022</text>
+      <text x="470" y="338" text-anchor="middle" font-size="11" fill="#5a6577">2025</text>
+      <text x="590" y="338" text-anchor="middle" font-size="11" fill="#5a6577">2028</text>
+      <text x="690" y="338" text-anchor="middle" font-size="11" fill="#5a6577">~2032</text>
+      <polyline points="70,70 230,95 350,120 470,150 590,180 690,205" fill="none" stroke="#d6453d" stroke-width="3" stroke-dasharray="6 4"/>
+      <text x="120" y="60" font-size="12" fill="#d6453d">Qubits NEEDED to break RSA (falling as math improves)</text>
+      <polyline points="110,300 230,255 350,205 470,175 590,150 690,120" fill="none" stroke="#1f6feb" stroke-width="3"/>
+      <circle cx="110" cy="300" r="3.5" fill="#1f6feb"/><circle cx="230" cy="255" r="3.5" fill="#1f6feb"/>
+      <circle cx="350" cy="205" r="3.5" fill="#1f6feb"/><circle cx="470" cy="175" r="3.5" fill="#1f6feb"/>
+      <text x="150" y="290" font-size="12" fill="#1f6feb">Machines BUILT (rising year on year)</text>
+      <rect x="600" y="40" width="100" height="280" fill="#fdeeed" opacity="0.55"/>
+      <line x1="650" y1="40" x2="650" y2="320" stroke="#d6453d" stroke-width="1" stroke-dasharray="3 3"/>
+      <text x="650" y="30" text-anchor="middle" font-size="13" fill="#d6453d" font-weight="700">Q-DAY</text>
+      <text x="650" y="250" text-anchor="middle" font-size="11" fill="#d6453d">lines</text>
+      <text x="650" y="265" text-anchor="middle" font-size="11" fill="#d6453d">converge</text>
+    </svg>
+    <figcaption>Illustrative. Capability rises while the qubits required to break RSA fall. Projected to meet around the early-to-mid 2030s. Exact timing is uncertain; the direction is not.</figcaption>
+  </figure>
+
+  <h3>The reason to act NOW: "Harvest Now, Decrypt Later"</h3>
+  <p>An attacker doesn't need a quantum computer today. They <span class="key">copy encrypted traffic now</span>, store it, and decrypt it on Q-Day. Where does the copying happen? Not on the website — on the <strong>network path</strong> the data travels:</p>
+  <ul>
+    <li><strong>Local Wi-Fi</strong> — a fake/compromised hotspot. Small reach.</li>
+    <li><strong>Your ISP</strong> — sees all your traffic. Bigger reach.</li>
+    <li><strong>Backbone &amp; undersea cables</strong> — tapping a major fibre sees millions of users' traffic at once. This is the nation-state scale, and it's documented.</li>
+    <li><strong>Internet exchange points</strong> — hubs where huge traffic concentrates.</li>
+  </ul>
+  <p>Copying ordinary data leaves <strong>no trace</strong>. So the realistic adversary already runs these taps for surveillance — to do "harvest now," they change nothing about collection; they just also <em>keep</em> the encrypted stuff they can't read yet.</p>
+
+  <div class="callout red">
+    <strong>Underwrite this point:</strong> the RSA-protected data you have <em>already</em> sent — and that has already been harvested — is <span class="key">permanently exposed</span> the day quantum arrives. Switching to new defences <strong>cannot save it</strong>; that traffic is already sitting on an adversary's shelf, and Q-Day simply unlocks it. There are two pools — <span class="key">past traffic</span> (unsavable) and <span class="key">future traffic</span> (protected only after you switch). So every day still on old RSA grows the pile of secrets that can never be made safe again. That is why "migrate early" is rational, not paranoid — and why RSA will be formally retired.
+  </div>
+
+  <h4>Mosca's Inequality — the one formula to remember</h4>
+  <span class="mono">X + Y > Z   →   you are exposed
+X = how long your migration takes
+Y = how long your data must stay secret
+Z = years until Q-Day</span>
+  <p>If migration time plus data shelf-life exceeds the time to Q-Day, your secrets are already doomed. The only lever you control is <span class="key">X</span> — migrate faster. That single inequality is the entire sales logic of quantum-safe security.</p>
+
+  <div class="callout amber">
+    <strong>The whole field, in one line: precaution is better than cure.</strong> There is no "cure" here — once Q-Day arrives, harvested data is already lost and there's no patching it after the fact. The only workable strategy is to act <em>before</em> the threat lands. That is the mindset the entire industry, and every government deadline below, is built on.
+  </div>
+
+  <!-- ============================ PART 4 ============================ -->
+  <span id="part4" class="anchor"></span>
+  <div class="partlabel">Part Four</div>
+  <h2 class="part">The world's answer — PQC, QKD, and the NIST competition</h2>
+
+  <h3>The NIST competition</h3>
+  <p>Since RSA is doomed, the world needed <strong>new math</strong> even a quantum computer can't crack. NIST ran an open, global competition to find it — deliberately public, so the whole world could attack the candidates.</p>
+  <figure>
+    <svg viewBox="0 0 760 150" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system,Segoe UI,Roboto,sans-serif">
+      <line x1="60" y1="80" x2="710" y2="80" stroke="#1f6feb" stroke-width="3"/>
+      <g font-size="12" fill="#1a2233">
+        <circle cx="90" cy="80" r="6" fill="#1f6feb"/><text x="90" y="55" text-anchor="middle">2016</text><text x="90" y="110" text-anchor="middle" fill="#5a6577">opens</text>
+        <circle cx="230" cy="80" r="6" fill="#1f6feb"/><text x="230" y="55" text-anchor="middle">2017</text><text x="230" y="110" text-anchor="middle" fill="#5a6577">82 entries</text>
+        <circle cx="400" cy="80" r="6" fill="#1f6feb"/><text x="400" y="55" text-anchor="middle">2022</text><text x="400" y="110" text-anchor="middle" fill="#5a6577">winners chosen</text>
+        <circle cx="570" cy="80" r="6" fill="#1f6feb"/><text x="570" y="55" text-anchor="middle">2024</text><text x="570" y="110" text-anchor="middle" fill="#5a6577">final standards</text>
+        <circle cx="680" cy="80" r="7" fill="#2f9e5e"/><text x="680" y="55" text-anchor="middle" fill="#1f7a45">now</text><text x="680" y="110" text-anchor="middle" fill="#1f7a45">rolling out</text>
+      </g>
+    </svg>
+    <figcaption>~8 years of open, adversarial testing — which is exactly why the world trusts the result.</figcaption>
+  </figure>
+  <ul>
+    <li>The winners are <span class="key">lattice-based</span>: <strong>Kyber → ML-KEM</strong> (FIPS 203, key exchange) and <strong>Dilithium → ML-DSA</strong> (FIPS 204, signatures). "Kyber" was the research name; "ML-KEM" is the official standard name — same recipe.</li>
+    <li>Because the competition was open, these algorithms are <strong>free for anyone to use</strong> — a fact that matters a lot for the business analysis later.</li>
+  </ul>
+
+  <h4>What is a "lattice problem"?</h4>
+  <ul>
+    <li>RSA's hard problem was factoring; Shor kills it. So a brand-new hard problem was needed — one Shor's trick doesn't apply to.</li>
+    <li>A <span class="key">lattice</span> is a giant grid of points — but in <strong>hundreds or thousands of dimensions</strong> (videos show 2D/3D only because that's all you can draw).</li>
+    <li>The puzzle: given a point slightly off the grid, find the nearest real grid point. Trivial in 3D; <strong>impossible-to-shortcut in 800 dimensions — even for a quantum computer.</strong> That's why lattices are quantum-resistant.</li>
+    <li>Keys are still a public/private pair: the public key is a scrambled description of the grid; the private key is the secret shortcut to the nearest point.</li>
+  </ul>
+
+  <h4>This is not theoretical — it's already running on billions of devices</h4>
+  <p>The most important proof that the switch <em>can really be done</em>: the world's most security-conscious companies have already done it.</p>
+  <ul>
+    <li><strong>Signal</strong> (2023, "PQXDH") and <strong>Apple iMessage</strong> (2024, "PQ3") already deployed post-quantum key exchange to <em>billions</em> of users — both using Kyber/ML-KEM, both built <em>in-house</em> from the free NIST standard, and independently verified by academic cryptographers. Major browsers and Cloudflare have done the same. You are very likely using post-quantum encryption already, without noticing.</li>
+    <li>No vendor sold them this. The PQC <em>algorithm</em> is free and open — anyone capable can implement it. (This is the key point for valuing software-only PQC products: the math is a commodity; the moat is elsewhere.)</li>
+    <li>During transition, systems run <span class="key">hybrid</span> (old RSA + new PQC together) as a safety net — then drop RSA entirely.</li>
+  </ul>
+  <div class="callout green">
+    Put the pieces together and the transition is clearly real and underway: the <span class="key">algorithm exists and is free</span>, it is <span class="key">already proven at planet scale</span> (Apple, Signal, browsers), and it is now <span class="key">mandated by government deadlines</span> (next section). The question is no longer "will this happen" but "who supplies it, and how fast each organisation moves."
+  </div>
+
+  <h3>Two ways to defend (plus the foundation under both)</h3>
+  <figure>
+    <svg viewBox="0 0 760 250" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system,Segoe UI,Roboto,sans-serif">
+      <rect x="280" y="20" width="200" height="46" rx="10" fill="#eef3fb" stroke="#1f6feb"/>
+      <text x="380" y="48" text-anchor="middle" font-size="14" fill="#0b4fc0">Protect the key</text>
+      <rect x="90" y="120" width="250" height="80" rx="10" fill="#fdf6e9" stroke="#e8a33d"/>
+      <text x="215" y="148" text-anchor="middle" font-size="14" fill="#a9741b" font-weight="600">PQC — new MATH</text>
+      <text x="215" y="170" text-anchor="middle" font-size="12" fill="#a9741b">lattices · software · normal internet</text>
+      <text x="215" y="187" text-anchor="middle" font-size="12" fill="#a9741b">cheap · global · "assumed" safe</text>
+      <rect x="420" y="120" width="250" height="80" rx="10" fill="#eef8f1" stroke="#2f9e5e"/>
+      <text x="545" y="148" text-anchor="middle" font-size="14" fill="#1f7a45" font-weight="600">QKD — PHYSICS</text>
+      <text x="545" y="170" text-anchor="middle" font-size="12" fill="#1f7a45">photons · hardware · special fibre</text>
+      <text x="545" y="187" text-anchor="middle" font-size="12" fill="#1f7a45">niche · short-range · "proven" safe</text>
+      <line x1="340" y1="66" x2="215" y2="118" stroke="#5a6577" stroke-width="2" marker-end="url(#c1)"/>
+      <line x1="420" y1="66" x2="545" y2="118" stroke="#5a6577" stroke-width="2" marker-end="url(#c1)"/>
+      <rect x="200" y="222" width="360" height="22" rx="6" fill="#f3eeff" stroke="#7c4dff"/>
+      <text x="380" y="238" text-anchor="middle" font-size="12" fill="#5a2fd6">QRNG — true randomness (the foundation both stand on)</text>
+      <defs><marker id="c1" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#5a6577"/></marker></defs>
+    </svg>
+    <figcaption>Two defences, one job. PQC = quantum-proof math over the normal internet (scales everywhere, rests on an assumption). QKD = uncopyable photons over special fibre (unbreakable + tap-detecting, but niche). QRNG sits under both.</figcaption>
+  </figure>
+
+  <h4>PQC vs. QKD — the deeper distinction</h4>
+  <table>
+    <tr><th></th><th>PQC (math)</th><th>QKD (physics)</th></tr>
+    <tr><td>How it's safe</td><td>An <em>assumption</em> — lattice math is believed unbreakable</td><td>A <em>law of physics</em> — photons can't be copied; tampering is detected</td></tr>
+    <tr><td>Form</td><td>Software, installed on devices</td><td>Hardware boxes on a dedicated fibre line</td></tr>
+    <tr><td>Reach</td><td>The whole internet, any distance, billions of devices</td><td>Point-to-point, ~150–200 km, fixed sites</td></tr>
+    <tr><td>Cost</td><td>Cheap (a software upgrade)</td><td>Expensive (special hardware + fibre)</td></tr>
+    <tr><td>Best for</td><td>Everything broad / lower-value</td><td>Crown jewels where no assumption is acceptable</td></tr>
+  </table>
+  <p class="tip">Key insight: on a QKD link, RSA becomes <em>redundant</em> — QKD <strong>is</strong> the secure channel RSA was only ever a workaround for. And for everywhere without QKD fibre, PQC replaces RSA.</p>
+
+  <h4>Why randomness is the hidden foundation</h4>
+  <ul>
+    <li>A key is a long string of 0s and 1s. If it's <strong>predictable</strong>, every lock is useless (an unbreakable vault with your birthday as the combination).</li>
+    <li>Normal computers can't be truly random — they use a formula (pseudo-random), guessable if you learn the formula or seed.</li>
+    <li>A <span class="key">QRNG</span> uses physics — genuinely unpredictable. Every algorithm (RSA, AES, PQC, QKD) consumes randomness whenever it makes a key. It's the floor under the whole building — and useful <em>today</em>, not just after Q-Day.</li>
+  </ul>
+
+  <!-- ============================ PART 5 ============================ -->
+  <span id="part5" class="anchor"></span>
+  <div class="partlabel">Part Five</div>
+  <h2 class="part">What governments around the world are doing</h2>
+
+  <p>The response runs on two tracks: (1) <strong>mandate the PQC software swap</strong> with hard deadlines, and (2) some nations also <strong>build physical QKD networks</strong>. The US/EU lean on track 1; China, Singapore and India also invest in track 2 — QNU's territory.</p>
+
+  <table>
+    <tr><th>Region</th><th>Key actions &amp; deadlines</th></tr>
+    <tr><td><strong>United States</strong></td><td>NIST finalised PQC standards (2024). NSM-10 + CNSA 2.0 mandate national-security systems be quantum-safe: new acquisitions by Jan 2027, full quantum-resistance by 2035. Agencies submitted PQC plans by April 2026; older crypto certs stop counting for federal procurement Sept 2026. The global pace-setter.</td></tr>
+    <tr><td><strong>European Union</strong></td><td>Member states must publish national PQC transition strategies by end-2026; critical systems migrated by 2030. Also funds QKD infrastructure (EuroQCI).</td></tr>
+    <tr><td><strong>United Kingdom</strong></td><td>NCSC timeline: identify &amp; plan by 2028; high-assurance/long-life systems by 2031; everything by 2035.</td></tr>
+    <tr><td><strong>China</strong></td><td>Leader in <em>physical</em> QKD: Micius satellite (2016), ~2,000 km Beijing–Shanghai backbone, large state programs (QuantumCTek, Origin Quantum). Treats quantum comms as sovereign infrastructure.</td></tr>
+    <tr><td><strong>India</strong></td><td>National Quantum Mission (~₹6,000 cr, 2023). Feb 2026 National Quantum-Safe Security Plan: critical sectors (defence, power, telecom, space, govt) begin PQC in 2027, enterprises 2028. The direct policy tailwind under QNU.</td></tr>
+    <tr><td><strong>Singapore</strong></td><td>National Quantum-Safe Network Plus (NQSN+), operational since 2023 — combines <em>both</em> PQC and QKD nationally. A model for "track 1 + track 2."</td></tr>
+    <tr><td><strong>Japan</strong></td><td>Coordinated across Cabinet/METI/MEXT; framed economically — a "quantum-driven economy" and 10 million quantum users by 2030.</td></tr>
+    <tr><td><strong>South Korea</strong></td><td>~$2.3 billion committed through 2035 toward indigenous quantum capability and a nationwide quantum-safe transition.</td></tr>
+  </table>
+
+  <div class="callout">
+    <strong>India in focus (QNU's home turf):</strong> the National Quantum Mission (~₹6,000 cr, 2023) funds the full stack, and the Feb 2026 National Quantum-Safe Security Plan sets concrete dates — critical sectors (<span class="key">defence, power, telecom, space, government</span>) must begin formal PQC migration in <strong>2027</strong>, enterprises in <strong>2028</strong>. Add the sovereignty rule (India won't import defence crypto), and the government is effectively QNU's regulator, customer, and standard-setter at once.
+  </div>
+
+  <div class="callout green">
+    The common thread across the USA, Europe and Asia: every serious government says the same three things — the threat is real but not yet here; "harvest now, decrypt later" makes waiting irrational; so migrate on a <span class="key">deadline</span>, targeting full quantum-resistance around <strong>2030–2035</strong>. Demand is now <em>policy-mandated</em>, not speculative — the clearest expression yet that the world has chosen precaution over cure, and the single biggest tailwind for companies like QNU.
+  </div>
+
+  <!-- ============================ PART 6 ============================ -->
+  <span id="part6" class="anchor"></span>
+  <div class="partlabel">Part Six</div>
+  <h2 class="part">The market &amp; the competition</h2>
+
+  <h3>Market size — small today, growing fast</h3>
+  <div class="statrow">
+    <div class="stat"><div class="n">~$0.45B</div><div class="l">QKD market, 2024</div></div>
+    <div class="stat"><div class="n">~$2.6B</div><div class="l">QKD market by 2030 (~33% CAGR)</div></div>
+    <div class="stat"><div class="n">~$1.2B</div><div class="l">Quantum cryptography, 2026</div></div>
+    <div class="stat"><div class="n">$15B+</div><div class="l">Quantum cryptography by ~2035</div></div>
+  </div>
+  <ul>
+    <li>Estimates vary widely by analyst, but they cluster around <strong>30–35% CAGR</strong> — a small but very fast-growing market.</li>
+    <li>The broader "quantum-safe" opportunity (including PQC software/services and migration) is larger than QKD alone, but also far more competitive.</li>
+  </ul>
+  <p class="tip">Read market-size figures with caution: this is an early, hype-prone sector and forecasts differ by 5–10× depending on definitions. The <em>direction</em> (steep growth, policy-driven) is more reliable than any single number.</p>
+
+  <h3>The competitive landscape</h3>
+  <p>Crucially, the two halves of the business compete very differently:</p>
+
+  <h4>QKD hardware (Armos's world) — scarce, high moat</h4>
+  <table>
+    <tr><th>Player</th><th>Position</th></tr>
+    <tr><td>Toshiba (Japan)</td><td>Most mature program; deployed metro networks (London, Tokyo); long-distance demos.</td></tr>
+    <tr><td>ID Quantique (Switzerland)</td><td>Commercial QKD &amp; QRNG pioneer; <em>acquired by IonQ in 2025</em> — consolidation underway.</td></tr>
+    <tr><td>QuantumCTek (China)</td><td>One of the largest globally; listed on Shanghai STAR Market; folded into China Telecom Quantum Group (2025). ID Quantique + QuantumCTek together hold &gt;45% share.</td></tr>
+    <tr><td>QuintessenceLabs (Australia), MagiQ (US)</td><td>Established niche QKD/QRNG players.</td></tr>
+    <tr><td><strong>QNU Labs (India)</strong></td><td>Emerging niche leader for Indian government/finance; ~500 km network demonstrated; sovereign positioning.</td></tr>
+  </table>
+  <p class="tip">Only a handful of firms worldwide can build working QKD hardware — that difficulty <em>is</em> the moat. But note the consolidation (IonQ–ID Quantique; China Telecom–QuantumCTek): well-capitalised players are absorbing pioneers.</p>
+
+  <h4>PQC software (Hodos's world) — crowded, thin moat</h4>
+  <ul>
+    <li>The algorithm is free, so the field is busy: <strong>PQShield, SandboxAQ, Post-Quantum</strong>, plus every big platform (Google, Microsoft, AWS, Cisco, Thales, IBM) building it in directly — and sophisticated buyers (Apple, banks) rolling their own.</li>
+    <li>Differentiation here isn't the math; it's migration tooling, integration, support — and, for QNU, <em>sovereignty</em>.</li>
+  </ul>
+
+  <!-- ============================ PART 7 ============================ -->
+  <span id="part7" class="anchor"></span>
+  <div class="partlabel">Part Seven</div>
+  <h2 class="part">QNU Labs — the company &amp; its products</h2>
+
+  <h3>The one-line goal</h3>
+  <div class="callout green">
+    QNU Labs is India's <span class="key">full-stack, sovereign, quantum-safe security company</span> — it replaces the breakable RSA foundation across an organisation, using all three defences (randomness, math, physics), <em>before Q-Day arrives</em>.
+  </div>
+
+  <h3>Company snapshot</h3>
+  <ul>
+    <li><strong>Founded:</strong> 2016, incubated at IIT Madras; operations in Bengaluru. ~160 employees.</li>
+    <li><strong>Founders:</strong> Anil Prabhakar (IIT Madras professor), Sunil Gupta (CEO; ~25 yrs in tech — ex-Finacle/EdgeVerve, Logica, Aricent, Hughes), Srinivasa Rao Aluri, Pravin Kini.</li>
+    <li><strong>Backing:</strong> supported by India's National Quantum Mission — the government's flagship quantum initiative — which is also a major customer. Strong strategic alignment with national policy, though it concentrates dependence on the public sector.</li>
+  </ul>
+
+  <h3>Milestone timeline</h3>
+  <figure>
+    <svg viewBox="0 0 760 200" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system,Segoe UI,Roboto,sans-serif">
+      <line x1="50" y1="100" x2="715" y2="100" stroke="#1f6feb" stroke-width="3"/>
+      <g font-size="11.5" fill="#1a2233">
+        <circle cx="70" cy="100" r="6" fill="#1f6feb"/><text x="70" y="78" text-anchor="middle">2016</text><text x="70" y="128" text-anchor="middle" fill="#5a6577">founded</text><text x="70" y="142" text-anchor="middle" fill="#5a6577">(IIT-M)</text>
+        <circle cx="180" cy="100" r="6" fill="#1f6feb"/><text x="180" y="78" text-anchor="middle">2018</text><text x="180" y="128" text-anchor="middle" fill="#5a6577">Cisco</text><text x="180" y="142" text-anchor="middle" fill="#5a6577">LaunchPad</text>
+        <circle cx="300" cy="100" r="6" fill="#1f6feb"/><text x="300" y="78" text-anchor="middle">2020</text><text x="300" y="128" text-anchor="middle" fill="#5a6577">Armos +</text><text x="300" y="142" text-anchor="middle" fill="#5a6577">Tropos launch</text>
+        <circle cx="420" cy="100" r="6" fill="#1f6feb"/><text x="420" y="78" text-anchor="middle">2023</text><text x="420" y="128" text-anchor="middle" fill="#5a6577">Navy QKD</text><text x="420" y="142" text-anchor="middle" fill="#5a6577">order</text>
+        <circle cx="530" cy="100" r="6" fill="#1f6feb"/><text x="530" y="78" text-anchor="middle">2024</text><text x="530" y="128" text-anchor="middle" fill="#5a6577">25 systems</text><text x="530" y="142" text-anchor="middle" fill="#5a6577">to Navy</text>
+        <circle cx="630" cy="100" r="6" fill="#2f9e5e"/><text x="630" y="78" text-anchor="middle">2025</text><text x="630" y="128" text-anchor="middle" fill="#1f7a45">~500 km</text><text x="630" y="142" text-anchor="middle" fill="#1f7a45">network</text>
+        <circle cx="700" cy="100" r="7" fill="#2f9e5e"/><text x="700" y="78" text-anchor="middle">2026</text><text x="700" y="128" text-anchor="middle" fill="#1f7a45">~1,000 km</text><text x="700" y="142" text-anchor="middle" fill="#1f7a45">network</text>
+      </g>
+    </svg>
+    <figcaption>From IIT-Madras incubation (2016) to defence-grade deployments under the National Quantum Mission — QNU rode the exact wave this whole guide describes.</figcaption>
+  </figure>
+  <ul>
+    <li><strong>Customers (mostly defence/government):</strong> Indian Navy (procurement signed 2023; 25 QKD systems delivered 2024), Indian Army (quantum-safe wireless), DRDO &amp; WESEE (Tropos QRNG for critical use), Bharat Electronics (BEL), plus a Middle East client. A "first commercial quantum-safe network" with a telecom operator.</li>
+    <li><strong>Go-to-market:</strong> products are listed on India's <em>GeM</em> government procurement portal (Armos, Tropos) — a real channel into public-sector buyers.</li>
+    <li><strong>2025–26 milestones:</strong> demonstrated India's first ~500+ km QKD network; under the National Quantum Mission, working toward 1,000 km+ military-grade networks.</li>
+  </ul>
+
+  <h3>The three pillars — by what they DO</h3>
+  <div class="pillgrid">
+    <div class="pill">
+      <div class="ic" style="color:var(--violet)">🎲</div>
+      <h4>Tropos (QRNG)</h4>
+      <p><strong>GENERATES</strong> true randomness. The "dice machine." Makes unguessable keys. The foundation under everything — it even feeds Armos and Hodos. Useful today, independent of Q-Day.</p>
+    </div>
+    <div class="pill">
+      <div class="ic" style="color:var(--amber)">🧮</div>
+      <h4>Hodos (PQC)</h4>
+      <p><strong>PROTECTS</strong> the key with quantum-proof <em>math</em> (NIST lattice algorithms, Kyber/Dilithium), fed by Tropos randomness. Software, runs on existing internet, scales everywhere.</p>
+    </div>
+    <div class="pill">
+      <div class="ic" style="color:var(--green)">🔦</div>
+      <h4>Armos (QKD)</h4>
+      <p><strong>DISTRIBUTES</strong> a key across distance using <em>physics</em> (single photons). Hardware over special fibre. Unbreakable &amp; tap-detecting, but niche and short-range (~150–200 km, ~2× the industry norm).</p>
+    </div>
+  </div>
+
+  <h4>The distinctions people trip on</h4>
+  <ul>
+    <li><strong>Tropos vs Armos:</strong> Tropos <em>makes</em> a random number in one place (dice machine). Armos <em>delivers</em> a key between two distant sites (uncopyable courier). Generation vs distribution. (Armos uses Tropos for its randomness.)</li>
+    <li><strong>Hodos vs Armos:</strong> not stacked — <em>siblings</em>. Two ways to do the same job: math over normal internet vs physics over special fibre.</li>
+    <li><strong>Why Armos if Hodos already beats quantum?</strong> Hodos is safe by <em>assumption</em>; Armos is safe by <em>physics</em> and <em>detects</em> eavesdroppers. Crown jewels want the guarantee, not the bet.</li>
+  </ul>
+
+  <h3>The full stack — how it fits together</h3>
+  <figure>
+    <svg viewBox="0 0 760 330" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system,Segoe UI,Roboto,sans-serif">
+      <rect x="60" y="20" width="640" height="48" rx="9" fill="#f6f8fc" stroke="#5a6577"/>
+      <text x="380" y="40" text-anchor="middle" font-size="13" fill="#1a2233" font-weight="600">Application products</text>
+      <text x="380" y="58" text-anchor="middle" font-size="12" fill="#5a6577">QConnect (VPN) · QVerse (messaging) · Secure File Sharing · Q-ORE (drone/vehicle encryptor) · Qosmos (randomness API) · QKDN (network)</text>
+      <rect x="120" y="92" width="520" height="44" rx="9" fill="#eef3fb" stroke="#1f6feb"/>
+      <text x="380" y="112" text-anchor="middle" font-size="14" fill="#0b4fc0" font-weight="600">QShield™ Platform</text>
+      <text x="380" y="128" text-anchor="middle" font-size="11" fill="#5a6577">unifies everything + KyntraQ key management</text>
+      <rect x="120" y="160" width="160" height="86" rx="9" fill="#fdf6e9" stroke="#e8a33d"/>
+      <text x="200" y="190" text-anchor="middle" font-size="14" fill="#a9741b" font-weight="600">Hodos</text>
+      <text x="200" y="210" text-anchor="middle" font-size="12" fill="#a9741b">math (PQC)</text>
+      <text x="200" y="228" text-anchor="middle" font-size="11" fill="#a9741b">software · global</text>
+      <rect x="480" y="160" width="160" height="86" rx="9" fill="#eef8f1" stroke="#2f9e5e"/>
+      <text x="560" y="190" text-anchor="middle" font-size="14" fill="#1f7a45" font-weight="600">Armos</text>
+      <text x="560" y="210" text-anchor="middle" font-size="12" fill="#1f7a45">physics (QKD)</text>
+      <text x="560" y="228" text-anchor="middle" font-size="11" fill="#1f7a45">hardware · niche</text>
+      <text x="380" y="205" text-anchor="middle" font-size="13" fill="#5a6577">two ways to</text>
+      <text x="380" y="222" text-anchor="middle" font-size="13" fill="#5a6577">protect the key</text>
+      <rect x="120" y="266" width="520" height="44" rx="9" fill="#f3eeff" stroke="#7c4dff"/>
+      <text x="380" y="286" text-anchor="middle" font-size="14" fill="#5a2fd6" font-weight="600">Tropos (QRNG) — true randomness</text>
+      <text x="380" y="302" text-anchor="middle" font-size="11" fill="#5a2fd6">the foundation feeding both pillars</text>
+    </svg>
+    <figcaption>Tropos is the floor (randomness). Hodos and Armos are the two pillars. QShield is the platform that unifies them. The "Q-" products are real-world apps built on the same three engines.</figcaption>
+  </figure>
+
+  <h3>The other products — just the pillars, packaged</h3>
+  <ul>
+    <li><span class="key">QConnect</span> — quantum-safe VPN (secure tunnels for remote access / Wi-Fi).</li>
+    <li><span class="key">QVerse</span> — quantum-safe messaging &amp; collaboration.</li>
+    <li><span class="key">Secure File Sharing</span> — quantum-safe file transfer.</li>
+    <li><span class="key">Q-ORE Encryptor</span> — uses the keys to encrypt drone / vehicle (V2X) traffic.</li>
+    <li><span class="key">Qosmos</span> — "Entropy as a Service": Tropos randomness over an API.</li>
+    <li><span class="key">KyntraQ (QKMS)</span> — key-management plumbing (store, rotate, distribute).</li>
+    <li><span class="key">QKDN</span> — networked Armos, chained via "trusted nodes."</li>
+    <li><span class="key">CBOM</span> — the first-sale scan inventorying where vulnerable crypto lives (Discovery → Assessment → Roadmap → Implementation).</li>
+  </ul>
+
+  <h3>When to use which — the decision logic</h3>
+  <table>
+    <tr><th>Situation</th><th>Use</th><th>Why</th></tr>
+    <tr><td>Ordinary / lower-value data, any distance</td><td>Tropos + Hodos</td><td>Math software over the normal internet — cheap, global, almost certainly safe</td></tr>
+    <tr><td>Absolute crown jewels, sites linked by fibre</td><td>Tropos + Armos (+ Hodos backup)</td><td>Physics guarantee + eavesdrop detection; no math assumption</td></tr>
+    <tr><td>Crown jewels but no fibre link (ship at sea, across oceans)</td><td>Tropos + Hodos</td><td>Armos physically can't reach — photons can't be amplified over long distances</td></tr>
+  </table>
+
+  <h4>The fibre reality (why QKD stays niche)</h4>
+  <ul>
+    <li>QKD uses <strong>ordinary optical fibre</strong> — often spare "dark fibre" — deployed <strong>underground between fixed sites</strong>.</li>
+    <li>It does <strong>not</strong> work over undersea cables: those amplify the signal every ~80–100 km, and amplifying a photon destroys it (no-cloning). That caps each link at ~150–200 km.</li>
+    <li>To go further over land → chain "trusted nodes" (each a point you must physically secure). To cross oceans → satellites (China's Micius), not cables.</li>
+  </ul>
+
+  <!-- ============================ PART 8 ============================ -->
+  <span id="part8" class="anchor"></span>
+  <div class="partlabel">Part Eight</div>
+  <h2 class="part">The investor lens</h2>
+
+  <h3>The central tension</h3>
+  <ul>
+    <li>The <span class="key">scalable</span> product (Hodos / PQC) reaches everyone — but it's built on a <strong>free, standardised algorithm</strong> anyone can implement (Apple, Signal, banks build their own). Thin moat.</li>
+    <li>The <span class="key">defensible</span> product (Armos / QKD) has a real hardware-and-physics moat (only a handful of firms worldwide) — but a <strong>bounded, niche market</strong> (fixed high-value fibre links).</li>
+    <li>QNU's bet to resolve this: <strong>full-stack + sovereign</strong> — be the one Indian player doing all three, locked in by government trust so foreign giants can't touch defence accounts.</li>
+  </ul>
+
+  <h3>What's working in its favour</h3>
+  <ul>
+    <li><strong>Policy-mandated demand:</strong> India's 2026 plan requires defence, power, telecom, space and government to begin PQC migration in 2027 — effectively a government purchase order for the category.</li>
+    <li><strong>Sovereignty moat:</strong> India won't buy defence crypto from China or even allied vendors — structural protection for a domestic champion.</li>
+    <li><strong>Today-revenue from Tropos:</strong> randomness sells now, independent of the Q-Day clock.</li>
+    <li><strong>Real deployments, not demos:</strong> Navy (25 systems), Army, DRDO, BEL; ~500 km network; on GeM portal.</li>
+    <li><strong>Full-stack breadth</strong> few rivals match (most do only QKD <em>or</em> only PQC).</li>
+  </ul>
+
+  <h3>Risks &amp; the questions a sharp diligence team would ask</h3>
+  <ul>
+    <li><strong>Revenue mix:</strong> how much from defensible QKD hardware (Armos) vs. commoditising PQC software (Hodos)?</li>
+    <li><strong>Customer concentration:</strong> how dependent on Indian government/defence (sticky but lumpy, long sales cycles) vs. commercial banking/telecom (scalable but competitive)?</li>
+    <li><strong>Recurring vs. one-off:</strong> how much recurring SaaS/subscription vs. one-time hardware sales?</li>
+    <li><strong>Product focus:</strong> for ~160 people, the portfolio is broad — which products actually drive money vs. roadmap/demo-ware?</li>
+    <li><strong>Global consolidation:</strong> IonQ bought ID Quantique; China Telecom absorbed QuantumCTek. Can a mid-size independent compete on capital and scale outside India?</li>
+    <li><strong>Technology risk:</strong> if the world standardises on cheap PQC software and treats QKD as niche, QNU's hardware edge matters less outside defence.</li>
+    <li><strong>Trusted-node security:</strong> long QKD networks rely on physically-secured relay points — how is that handled for defence buyers?</li>
+  </ul>
+
+  <div class="note-final">
+    <h3>The whole story in five sentences</h3>
+    <p>1. Today's security rests on a math puzzle (factoring) that normal computers can't solve — that's RSA.</p>
+    <p>2. Quantum computers will eventually solve it (Shor's algorithm), and attackers are already harvesting encrypted data to decrypt on "Q-Day" (early-to-mid 2030s).</p>
+    <p>3. So the world is switching — and now <em>mandating</em> the switch — to quantum-proof math (PQC) and physics-based key delivery (QKD), both fed by true randomness (QRNG).</p>
+    <p>4. QNU Labs builds all three — Tropos (randomness), Hodos (math), Armos (physics) — wrapped in the QShield platform and a migration service, positioned as India's sovereign champion with real defence deployments.</p>
+    <p>5. The investment question: whether "full-stack + sovereign" can turn a commoditising software market and a niche hardware market into one large, durable business.</p>
+  </div>
+
+  <!-- ============================ GLOSSARY ============================ -->
+  <span id="glossary" class="anchor"></span>
+  <div class="partlabel">Reference</div>
+  <h2 class="part">Glossary</h2>
+  <table>
+    <tr><th>Term</th><th>Plain meaning</th></tr>
+    <tr><td>RSA</td><td>Classic encryption that shares keys using "multiply two primes (easy) vs factor back (hard)." Quantum breaks it.</td></tr>
+    <tr><td>Public / private key</td><td>An open padlock you give everyone (locks only) and the one key you keep (unlocks).</td></tr>
+    <tr><td>AES</td><td>Fast everyday encryption that locks the actual data, using the small key RSA delivered. Largely quantum-safe.</td></tr>
+    <tr><td>Qubit</td><td>A quantum bit — can be 0, 1, or a blend of both (superposition).</td></tr>
+    <tr><td>Entanglement</td><td>A link between qubits so they share one "fate"; lets them compute together.</td></tr>
+    <tr><td>Physical vs logical qubit</td><td>Physical = raw, noisy hardware qubit. Logical = many physical ones teamed up to act as one reliable qubit (~100–1,000 physical per logical).</td></tr>
+    <tr><td>Decoherence</td><td>The fragility that destroys a qubit's quantum state in millionths of a second.</td></tr>
+    <tr><td>Shor's algorithm</td><td>The quantum method that factors big numbers fast — i.e. breaks RSA.</td></tr>
+    <tr><td>Q-Day</td><td>The (future) day a quantum computer can break today's encryption. Estimated early-to-mid 2030s.</td></tr>
+    <tr><td>Harvest Now, Decrypt Later</td><td>Copy encrypted data today, store it, decrypt it on Q-Day.</td></tr>
+    <tr><td>PQC</td><td>Post-quantum cryptography — new quantum-proof math (lattice-based: ML-KEM/Kyber, ML-DSA/Dilithium). Software. = QNU's Hodos.</td></tr>
+    <tr><td>QKD</td><td>Quantum key distribution — sharing a key via single photons; eavesdropping physically detectable. Hardware. = QNU's Armos.</td></tr>
+    <tr><td>QRNG</td><td>Quantum random number generator — true, unguessable randomness. = QNU's Tropos.</td></tr>
+    <tr><td>Mosca's Inequality</td><td>X (migration time) + Y (data shelf life) &gt; Z (years to Q-Day) → you're exposed.</td></tr>
+    <tr><td>Trusted node</td><td>A secured relay station used to chain QKD links beyond ~200 km.</td></tr>
+  </table>
+
+  <div class="divider"></div>
+  <p class="src">Sources consulted: QNu Labs (qnulabs.com — products, About, platform, news); The Quantum Insider (RSA-breaking qubit estimates; India's national plan; quantum-cryptography companies; funding); IBM Quantum (roadmap &amp; pricing); NIST PQC standards (FIPS 203/204/205); Apple Security Research &amp; Cloud Security Alliance (PQ3/PQXDH); US PQC regulatory framework and global deadline trackers (postquantum.com); Grand View Research, MarketsandMarkets, Market Research Future &amp; Roots Analysis (market sizing); Tracxn &amp; company profiles (QNU overview &amp; deployments). Qubit figures, market forecasts and Q-Day timing are best-available estimates as of mid-2026 and are inherently uncertain; market forecasts in particular vary widely by analyst. This document is an educational summary for evaluating QNU Labs, not investment advice.</p>
+
+</div>
+</body>
+</html>
